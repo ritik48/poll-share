@@ -2,7 +2,6 @@ import { redirect, useLoaderData } from "react-router-dom";
 import { logoutUser } from "../user/userSlice";
 import store from "../../../store";
 import requireAuth from "../../utils/requireAuth";
-// import requireAuth from "../../utils/requireAuth";
 
 export function Poll() {
   const { polls } = useLoaderData();
@@ -17,7 +16,7 @@ export function Poll() {
 }
 
 export async function pollLoader({ request }) {
-  requireAuth(request);
+  await requireAuth(request);
   const res = await fetch("http://127.0.0.1:3000/poll", {
     method: "GET",
     credentials: "include",

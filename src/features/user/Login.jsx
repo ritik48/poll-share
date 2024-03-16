@@ -155,14 +155,8 @@ async function loginAction({ request }) {
     errors.credentials = true;
     return errors;
   }
-
-  store.dispatch(
-    createUser({
-      email: data.user.email,
-      name: data.user.name,
-      username: data.user.username,
-    }),
-  );
+  console.log("here login = ", data.user.username);
+  store.dispatch(createUser(data.user));
 
   const url = new URL(request.url);
   const redirectTo = url.searchParams.get("redirectTo") || "/";

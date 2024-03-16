@@ -1,22 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import {
-  createUser,
-  logoutUser,
-  userSelector,
-} from "../features/user/userSlice";
-import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { logoutUser, userSelector } from "../features/user/userSlice";
 
 export default function Header() {
-  const dispatch = useDispatch();
   const { username } = useSelector(userSelector);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   async function handleLogout() {
-    const res = await fetch("http://127.0.0.1:3000/logout", {
+    await fetch("http://127.0.0.1:3000/logout", {
       credentials: "include",
     });
 
     dispatch(logoutUser());
+    navigate("/");
   }
 
   return (

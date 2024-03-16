@@ -1,9 +1,27 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigation } from "react-router-dom";
 import Header from "./Header";
-// import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCurrentUser, loadingSelector } from "../features/user/userSlice";
+import { useEffect } from "react";
 
 export default function AppLayout() {
-  console.log("App layout");
+  const loading = useSelector(loadingSelector);
+  const dispatch = useDispatch();
+
+  const navigation = useNavigation();
+  const isLoading = navigation.state === "loading";
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
+  if (loading || isLoading)
+    return (
+      <div className="absolute flex h-full w-full items-center justify-center text-6xl">
+        Loading...
+      </div>
+    );
+
   return (
     <div className="flex h-screen flex-col">
       <Header />
