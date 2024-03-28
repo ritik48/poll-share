@@ -1,32 +1,38 @@
-import { redirect, useLoaderData } from "react-router-dom";
-import { logoutUser } from "../user/userSlice";
-import store from "../../../store";
+import { useLoaderData, defer, Await } from "react-router-dom";
 import requireAuth from "../../utils/requireAuth";
+import React from "react";
+import { fetchPolls } from "../../utils/api";
 
 export function Poll() {
-  const { polls } = useLoaderData();
+  const loaderData = useLoaderData();
   return (
-    <>
-      <h1 className="text-6xl">All Polls 🟢</h1>
-      {polls.map((poll) => {
-        return <div className="text-lg">{poll.title}</div>;
-      })}
-    </>
+    <div className="pt-32">
+      <React.Suspense
+        fallback={
+          <div className="absolute flex w-full items-center justify-center text-6xl">
+            Loading...
+          </div>
+        }
+      >
+        <h1 className="text-6xl">All Polls 🟢</h1>
+        <Await resolve={loaderData.polls}>
+          {(loadedPolls) => {
+            console.log(loadedPolls);
+            return loadedPolls.polls.map((poll) => (
+              <div className="text-lg" key={poll._id}>
+                {poll.title}
+              </div>
+            ));
+          }}
+        </Await>
+      </React.Suspense>
+    </div>
   );
 }
 
 export async function pollLoader({ request }) {
-  await requireAuth(request);
-  const res = await fetch("http://127.0.0.1:3000/poll", {
-    method: "GET",
-    credentials: "include",
-  });
+  await requireAuth(request, true);
 
-  if (!res.ok) {
-    store.dispatch(logoutUser());
-    throw redirect("/login?redirectTo=/poll");
-  }
-
-  const data = await res.json();
-  return data;
+  const polls = fetchPolls();
+  return defer({ polls });
 }

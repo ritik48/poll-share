@@ -24,6 +24,9 @@ const userSlice = createSlice({
       state.isAuthenticated = false;
       state.isLoading = false;
     },
+    loadingUser(state, action) {
+      state.isLoading = true;
+    },
   },
 });
 

@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .grid-cols-auto-320 {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+:root {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #fffbf3;
 }

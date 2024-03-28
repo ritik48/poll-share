@@ -1,29 +1,30 @@
-import { Outlet, useNavigation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCurrentUser, loadingSelector } from "../features/user/userSlice";
+import { useSelector } from "react-redux";
+import { loadingSelector } from "../features/user/userSlice";
 import { useEffect } from "react";
+import requireAuth from "../utils/requireAuth";
 
 export default function AppLayout() {
   const loading = useSelector(loadingSelector);
-  const dispatch = useDispatch();
-
-  const navigation = useNavigation();
-  const isLoading = navigation.state === "loading";
 
   useEffect(() => {
-    dispatch(fetchCurrentUser());
-  }, [dispatch]);
+    async function fetchCurrentUser() {
+      await requireAuth(null, false);
+    }
+    fetchCurrentUser();
+  }, []);
 
-  if (loading || isLoading)
+  if (loading) {
     return (
       <div className="absolute flex h-full w-full items-center justify-center text-6xl">
         Loading...
       </div>
     );
+  }
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="">
       <Header />
       <Outlet />
     </div>

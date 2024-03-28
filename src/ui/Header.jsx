@@ -17,16 +17,22 @@ export default function Header() {
   }
 
   return (
-    <div className="px-4 py-4 sm:px-10 sm:py-6">
+    <div className="border absolute inset-x-0 px-4 py-4 sm:px-10 sm:py-2">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
         <Link to={"/"} className="text-2xl font-bold">
           Poll s.
         </Link>
         <div className="hidden items-start gap-10 sm:flex">
-          <Link to={"/poll"} className="font-semibold text-[#464646]">
+          <Link
+            to={"/poll"}
+            className="font-semibold text-[#464646] underline-offset-2 hover:underline"
+          >
             Discover
           </Link>
-          <Link to={"/secret"} className="font-semibold text-[#464646]">
+          <Link
+            to={"/secret"}
+            className="font-semibold text-[#464646] underline-offset-2 hover:underline"
+          >
             Create
           </Link>
         </div>

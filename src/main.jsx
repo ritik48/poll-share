@@ -4,19 +4,19 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import "./index.css";
-import { Hero } from "./App.jsx";
 import AppLayout from "./ui/AppLayout.jsx";
 import { Login, loginAction } from "./features/user/Login.jsx";
 import store from "../store.js";
 import { Poll, pollLoader } from "./features/poll/Poll.jsx";
 import requireAuth from "./utils/requireAuth.js";
+import Home, { homeLoader } from "./ui/Home.jsx";
 
 function Secret() {
   return <h1 className="text-center text-6xl">Secret Route</h1>;
 }
 
 async function secretLoader({ request }) {
-  await requireAuth(request);
+  await requireAuth(request, true);
 
   return null;
 }
@@ -28,7 +28,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Hero />,
+        element: <Home />,
+        loader: homeLoader,
       },
       {
         path: "poll",

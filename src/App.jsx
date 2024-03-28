@@ -2,8 +2,8 @@ import Header from "./ui/Header";
 
 export function Hero() {
   return (
-    <div className="flex-grow px-4 pt-28 sm:px-10">
-      <div className="relative mx-auto flex h-full max-w-6xl flex-col items-center gap-8">
+    <div className="flex h-screen items-center px-4 sm:px-10">
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-8">
         <img
           src="/assets/bg-images/poll.png"
           className="absolute left-0 top-[3rem] w-10 opacity-65 sm:top-0 sm:w-14 sm:opacity-100 lg:w-20"
@@ -36,9 +36,12 @@ export function Hero() {
           </span>
           your vision with the world.
         </div>
-        <button className="mt-5 rounded-full border border-slate-700 px-10 py-2">
+        <a
+          href="#polls"
+          className="mt-5 rounded-full border border-slate-700 px-10 py-2"
+        >
           Explore
-        </button>
+        </a>
       </div>
     </div>
   );
