@@ -1,9 +1,25 @@
 import { Form, Link, redirect, useActionData } from "react-router-dom";
 import store from "../../../store";
 import { createUser } from "./userSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
-function Login() {
-  const errors = useActionData();
+function Signup() {
+  const actionData = useActionData();
+
+  let errors, data;
+  if (actionData) {
+    errors = actionData.errors;
+    data = actionData.data;
+  }
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      toast("User created auccessfully.");
+    }
+  }, [data]);
 
   return (
     <div className="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
@@ -22,13 +38,34 @@ function Login() {
         <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
           {errors?.credentials && (
             <p className="py-2 text-center text-sm font-medium text-red-500">
-              🔴 Incorrect credentials
+              🔴 {errors.credentials}
             </p>
           )}
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-            Sign in to your account
+            Create new account
           </h1>
-          <Form method="POST" className="space-y-4 md:space-y-6" replace>
+          <Form method="POST" className="space-y-4 md:space-y-6">
+            <div>
+              <label
+                htmlFor="name"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Name
+              </label>
+              <input
+                type="name"
+                name="name"
+                id="name"
+                className="focus:border-1 block w-full rounded-lg border bg-gray-50 p-2.5 text-gray-900 outline-none transition-all duration-300 focus:border-[#ff5e2e] focus:ring-blue-800 sm:text-sm"
+                placeholder="name"
+                required=""
+              />
+              {errors?.name && (
+                <p className="py-1 text-sm font-medium text-red-500">
+                  {errors.name}
+                </p>
+              )}
+            </div>
             <div>
               <label
                 htmlFor="email"
@@ -41,12 +78,33 @@ function Login() {
                 name="email"
                 id="email"
                 className="focus:border-1 block w-full rounded-lg border bg-gray-50 p-2.5 text-gray-900 outline-none transition-all duration-300 focus:border-[#ff5e2e] focus:ring-blue-800 sm:text-sm"
-                placeholder="name@company.com"
+                placeholder="email"
                 required=""
               />
               {errors?.email && (
                 <p className="py-1 text-sm font-medium text-red-500">
                   {errors.email}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="username"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Username
+              </label>
+              <input
+                type="name"
+                name="username"
+                id="username"
+                className="focus:border-1 block w-full rounded-lg border bg-gray-50 p-2.5 text-gray-900 outline-none transition-all duration-300 focus:border-[#ff5e2e] focus:ring-blue-800 sm:text-sm"
+                placeholder="username"
+                required=""
+              />
+              {errors?.username && (
+                <p className="py-1 text-sm font-medium text-red-500">
+                  {errors.username}
                 </p>
               )}
             </div>
@@ -76,43 +134,51 @@ function Login() {
               type="submit"
               className="hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 w-full rounded-lg bg-[#ff5e2e] px-5 py-2.5 text-center text-sm font-medium text-white ring-offset-2 hover:bg-[#ed6749] focus:outline-none focus:ring-2 focus:ring-orange-300"
             >
-              Log in
+              Sign up
             </button>
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-              Don't have an account yet?{" "}
+              Already have an account ?{" "}
               <Link
-                to={"/signup"}
+                to={"/login"}
                 className="dark:text-primary-500 font-medium text-[#ff5e2e] hover:underline"
               >
-                Sign up
+                Log in
               </Link>
             </p>
           </Form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
 
-async function loginAction({ request }) {
+async function signupAction({ request }) {
   const formData = await request.formData();
 
-  const { email, password } = Object.fromEntries(formData);
+  const { email, password, username, name } = Object.fromEntries(formData);
 
   const errors = {};
 
   if (!email) {
     errors.email = "Email cannot be empty.";
   }
+  if (!name) {
+    errors.email = "Email cannot be empty.";
+  }
+  if (!username) {
+    errors.username = "Username cannot be empty.";
+  }
   if (!password) {
     errors.password = "Password cannot be empty";
   }
 
-  if (Object.keys(errors).length > 1) {
-    return errors;
+  //   console.log(errors);
+  if (Object.keys(errors).length >= 1) {
+    return { errors };
   }
 
-  const res = await fetch("http://127.0.0.1:3000/login", {
+  const res = await fetch("http://127.0.0.1:3000/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -120,21 +186,20 @@ async function loginAction({ request }) {
     body: JSON.stringify({
       email,
       password,
+      username,
+      name,
     }),
-    credentials: "include",
   });
 
   const data = await res.json();
   if (!res.ok) {
-    errors.credentials = true;
-    return errors;
+    errors.credentials = data.message;
+    return { errors };
   }
-  console.log("here login = ", data.user.username);
+
   store.dispatch(createUser(data.user));
 
-  const url = new URL(request.url);
-  const redirectTo = url.searchParams.get("redirectTo") || "/";
-  return redirect(redirectTo);
+  return redirect("/");
 }
 
-export { Login, loginAction };
+export { Signup, signupAction };

@@ -8,18 +8,10 @@ import AppLayout from "./ui/AppLayout.jsx";
 import { Login, loginAction } from "./features/user/Login.jsx";
 import store from "../store.js";
 import { Poll, pollLoader } from "./features/poll/Poll.jsx";
-import requireAuth from "./utils/requireAuth.js";
+
 import Home, { homeLoader } from "./ui/Home.jsx";
-
-function Secret() {
-  return <h1 className="text-center text-6xl">Secret Route</h1>;
-}
-
-async function secretLoader({ request }) {
-  await requireAuth(request, true);
-
-  return null;
-}
+import { Signup, signupAction } from "./features/user/Signup.jsx";
+import { Create } from "./features/poll/Create.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,9 +29,8 @@ const router = createBrowserRouter([
         loader: pollLoader,
       },
       {
-        path: "/secret",
-        element: <Secret />,
-        loader: secretLoader,
+        path: "/create",
+        element: <Create />,
       },
     ],
   },
@@ -47,6 +38,11 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
     action: loginAction,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+    action: signupAction,
   },
 ]);
 

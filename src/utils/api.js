@@ -9,7 +9,7 @@ export const fetchAllPolls = async () => {
 };
 
 export const fetchPoll = async (id) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   const res = await fetch(`${BACKEND}/poll/${id}`, {
     method: "GET",
     credentials: "include",
