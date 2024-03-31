@@ -17,7 +17,7 @@ export default function Header() {
   }
 
   return (
-    <div className="border absolute inset-x-0 px-4 py-4 sm:px-10 sm:py-2">
+    <div className="fixed inset-x-0 z-10 border bg-[#fffbf3] px-4 py-4 sm:px-10 sm:py-2">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
         <Link to={"/"} className="text-2xl font-bold">
           Poll s.

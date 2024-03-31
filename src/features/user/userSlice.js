@@ -35,7 +35,7 @@ function fetchCurrentUser() {
     dispatch({ type: "user/loadingUser" });
     const res = await fetch("http://127.0.0.1:3000/getUser", {
       credentials: "include",
-    });
+    }); 
 
     if (!res.ok) {
       dispatch({ type: "user/logoutUser" });

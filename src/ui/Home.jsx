@@ -2,7 +2,7 @@ import { Link, useLoaderData } from "react-router-dom";
 import { Hero } from "../App";
 // import { Poll } from "../features/poll/Poll";
 import { GrFormNextLink } from "react-icons/gr";
-import { fetchPolls } from "../utils/api";
+import { fetchAllPolls } from "../utils/api";
 
 function Polls({ polls }) {
   console.log(polls);
@@ -15,7 +15,10 @@ function Polls({ polls }) {
         <h1 className="text-center text-5xl font-medium">Active Polls</h1>
         <div className="grid-cols-auto-320 grid gap-4">
           {polls.map((poll) => (
-            <div className="min-w-80 space-y-2 rounded-md border border-gray-400 p-2">
+            <div
+              className="min-w-80 space-y-2 rounded-md border border-gray-400 p-2"
+              key={poll._id}
+            >
               <img
                 className="h-52 w-full rounded-md bg-red-500"
                 src="https://loremflickr.com/640/480/abstract"
@@ -31,7 +34,10 @@ function Polls({ polls }) {
                     alt="user"
                   />
                   <div>{poll.user.name}</div>
-                  <Link className="ml-auto rounded-full border border-gray-500 bg-[#fffbf3]">
+                  <Link
+                    to={`poll/${poll._id}`}
+                    className="ml-auto rounded-full border border-gray-500 bg-[#fffbf3]"
+                  >
                     <GrFormNextLink size={30} />
                   </Link>
                 </div>
@@ -45,7 +51,7 @@ function Polls({ polls }) {
 }
 
 export async function homeLoader() {
-  const polls = await fetchPolls();
+  const polls = await fetchAllPolls();
 
   return polls;
 }

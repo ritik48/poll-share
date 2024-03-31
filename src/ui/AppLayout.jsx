@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { loadingSelector } from "../features/user/userSlice";
 import { useEffect } from "react";
 import requireAuth from "../utils/requireAuth";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AppLayout() {
   const loading = useSelector(loadingSelector);
@@ -27,6 +29,7 @@ export default function AppLayout() {
     <div className="">
       <Header />
       <Outlet />
+      <ToastContainer />
     </div>
   );
 }

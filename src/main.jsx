@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         loader: homeLoader,
       },
       {
-        path: "poll",
+        path: "poll/:id",
         element: <Poll />,
         loader: pollLoader,
       },
