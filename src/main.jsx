@@ -11,7 +11,7 @@ import { Poll, pollLoader } from "./features/poll/Poll.jsx";
 
 import Home, { homeLoader } from "./ui/Home.jsx";
 import { Signup, signupAction } from "./features/user/Signup.jsx";
-import { Create } from "./features/poll/Create.jsx";
+import { Create, createPollAction } from "./features/poll/Create.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +31,7 @@ const router = createBrowserRouter([
       {
         path: "/create",
         element: <Create />,
+        action: createPollAction,
       },
     ],
   },
