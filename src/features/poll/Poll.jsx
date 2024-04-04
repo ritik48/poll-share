@@ -6,7 +6,7 @@ import {
   useNavigation,
 } from "react-router-dom";
 import React from "react";
-import { addVote, fetchPoll } from "../../utils/api";
+import { addVote, deletePoll, fetchPoll } from "../../utils/api";
 import { toast } from "react-toastify";
 import { createUser, userSelector } from "../user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +24,6 @@ function formatTime(timestamp) {
 }
 
 function Option({ option, vote, onVote, id, index }) {
-  console.log("vote = ", vote);
   const votes = useSelector((state) => state.user.user?.vote);
 
   const navigation = useNavigation();
@@ -60,6 +59,9 @@ export function Poll() {
 
   const navigate = useNavigate();
 
+  const { username } = useSelector(userSelector);
+  console.log(username);
+
   async function handleVote(id, choice) {
     const data = await addVote(id, choice);
 
@@ -71,22 +73,35 @@ export function Poll() {
     navigate(".", { replace: true });
   }
 
+  async function handleDeletePoll(id) {
+    const res = await deletePoll(id);
+
+    console.log("delete = ", res);
+    toast(res.message);
+
+    if (res.success) {
+      navigate("/");
+    }
+  }
+
   return (
     <div className="pt-32">
       <React.Suspense
         fallback={
-          <div className="absolute mt-28 flex w-full items-center justify-center text-6xl">
-            <span className="loader"></span>
+          <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <span className="loader"></span>
+            </div>
           </div>
         }
       >
-        <div>
-          <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-6xl">
+          <div className="">
             <Await resolve={poll}>
               {({ poll }) => {
-                console.log("votes = ", poll.votes);
-                const hasVotes = Object.keys(poll.votes).length !== 0;
-                console.log("has votes = ", hasVotes);
+                // console.log("votes = ", poll.votes);
+                // const hasVotes = Object.keys(poll.votes).length !== 0;
+                // console.log("has votes = ", hasVotes);
                 return (
                   <div className="mx-auto max-w-[70%] space-y-7">
                     <h2 className="text-4xl">{poll.title}</h2>
@@ -108,6 +123,14 @@ export function Poll() {
                       ))}
                     </div>
                     <div>{formatTime(poll.createdAt)}</div>
+                    {username === poll.user.username && (
+                      <button
+                        onClick={() => handleDeletePoll(poll._id)}
+                        className="text-x w-fit rounded-md border bg-black px-4 py-2 text-white transition-all duration-300 ease-in-out hover:border-black"
+                      >
+                        Delete Poll 🗑️
+                      </button>
+                    )}
                   </div>
                 );
               }}

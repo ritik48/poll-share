@@ -41,3 +41,29 @@ export const addVote = async (id, choice) => {
   const data = await res.json();
   return data;
 };
+
+export const createPoll = async (pollData) => {
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  const res = await fetch(`${BACKEND}/poll/new`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(pollData),
+  });
+
+  const data = await res.json();
+
+  return data;
+};
+
+export const deletePoll = async (id) => {
+  const res = await fetch(`${BACKEND}/poll/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  return data;
+};
