@@ -7,7 +7,7 @@ import "./index.css";
 import AppLayout from "./ui/AppLayout.jsx";
 import { Login, loginAction } from "./features/user/Login.jsx";
 import store from "../store.js";
-import { Poll, pollLoader } from "./features/poll/Poll.jsx";
+import { Poll, pollAction, pollLoader } from "./features/poll/Poll.jsx";
 
 import Home, { homeLoader } from "./ui/Home.jsx";
 import { Signup, signupAction } from "./features/user/Signup.jsx";
@@ -27,6 +27,7 @@ const router = createBrowserRouter([
         path: "poll/:id",
         element: <Poll />,
         loader: pollLoader,
+        action: pollAction,
       },
       {
         path: "/create",

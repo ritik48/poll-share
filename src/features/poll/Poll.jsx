@@ -3,14 +3,17 @@ import {
   defer,
   Await,
   useNavigate,
-  useNavigation,
+  useFetcher,
 } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+
 import Countdown from "react-countdown";
-import React, { useState } from "react";
-import { addVote, deletePoll, fetchPoll } from "../../utils/api";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { createUser, userSelector } from "../user/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+
+import { fetchCurrentUser, userSelector } from "../user/userSlice";
+import { addVote, deletePoll, fetchPoll } from "../../utils/api";
+
 
 function formatTime(timestamp) {
   const date = new Date(timestamp);
@@ -19,8 +22,6 @@ function formatTime(timestamp) {
   const month = date.toLocaleString("default", { month: "long" });
   const day = date.getDate();
 
-  console.log(`${date.getHours()} : ${date.getMinutes()}`);
-
   const formattedDate = `${day} ${month} ${year}`;
 
   return formattedDate;
@@ -28,9 +29,8 @@ function formatTime(timestamp) {
 
 function Option({ option, vote, onVote, id, index, loading, selectedOption }) {
   const votes = useSelector((state) => state.user.user?.vote);
-
-  const navigation = useNavigation();
   const userChoice = votes?.find((vote) => vote.poll_id === id)?.poll_choice;
+
   return (
     <div
       onClick={() => onVote(id, index)}
@@ -54,7 +54,7 @@ function Option({ option, vote, onVote, id, index, loading, selectedOption }) {
       </div>
       <div className="absolute inset-0 z-[-1] " style={{ width: `${vote}%` }}>
         <div
-          className={`absolute inset-0 animate-[option_0.6s_ease-in-out_1] ${vote > 0 && userChoice === index && navigation.state !== "loading" ? "bg-[#ff8e6b]" : "bg-[#e1cf4a]"}`}
+          className={`absolute inset-0 animate-[option_0.6s_ease-in-out_1] ${vote > 0 && userChoice === index ? "bg-[#ff8e6b]" : "bg-[#e1cf4a]"}`}
         ></div>
       </div>
     </div>
@@ -64,59 +64,49 @@ function Option({ option, vote, onVote, id, index, loading, selectedOption }) {
 function timeLeft(publishedAt, expiresAt) {
   const d1 = new Date(publishedAt);
   const d2 = new Date(expiresAt);
-  console.log(d2.getTime() - d1.getTime());
+  // console.log(d2.getTime() - d1.getTime());
   return d2.getTime();
-
-  // let date = new Date(timestamp);
-  // console.log(date);
-  // date.setMinutes(date.getMinutes() + minutes);
-  // console.log(date);
-  // return date;
 }
 
 export function Poll() {
-  const dispatch = useDispatch();
-  const { poll } = useLoaderData();
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
+  const { poll } = useLoaderData();
+  const fetcher = useFetcher();
+  const loading = fetcher.state !== "idle";
   const [selectedOption, setSelectedOption] = useState(null);
-
   const { username } = useSelector(userSelector);
 
-  const navigation = useNavigation();
-  console.log("state = = = ", navigation.state);
+  const dispatch = useDispatch();
 
   function handleSelected(id) {
-    setSelectedOption((prev) => (prev === id ? null : id));
+    setSelectedOption(id);
   }
 
   async function handleVote(id, choice) {
-    setLoading(true);
     handleSelected(choice);
-
-    const data = await addVote(id, choice);
-    setLoading(false);
-
-    if (!data.success) {
-      handleSelected(null);
-      return toast(data.message, { autoClose: 2000 });
-    }
-    dispatch(createUser(data.user));
-    toast("Your vote has been recorded");
-    navigate(".", { replace: true });
+    fetcher.submit({ id: id, choice: choice }, { method: "POST" });
   }
 
   async function handleDeletePoll(id) {
     const res = await deletePoll(id);
 
-    console.log("delete = ", res);
     toast(res.message);
-
     if (res.success) {
       navigate("/");
     }
   }
+
+  useEffect(() => {
+    const fetcherData = fetcher.data;
+    if (fetcher.state === "idle" && fetcherData) {
+      if (fetcherData.success) {
+        dispatch(fetchCurrentUser());
+        toast("Your vote has been recorded");
+      } else {
+        toast(fetcher.data.message);
+      }
+    }
+  }, [fetcher, dispatch]);
 
   return (
     <div className="pt-32">
@@ -132,6 +122,7 @@ export function Poll() {
         <div className="mx-auto max-w-6xl">
           <Await resolve={poll}>
             {({ poll }) => {
+              // console.log(poll.votes);
               return (
                 <div className="flex">
                   <div className="flex-grow space-y-7">
@@ -210,5 +201,19 @@ export async function pollLoader({ request, params }) {
   const { id } = params;
 
   const poll = fetchPoll(id);
+  console.log("here again");
   return defer({ poll });
+}
+
+export async function pollAction({ request }) {
+  const formData = await request.formData();
+  const { id, choice } = Object.fromEntries(formData);
+
+  // update the vote
+  const data = await addVote(id, choice);
+  if (!data.success) {
+    return { success: false, message: data.message };
+  }
+
+  return { success: true, message: "Successfully polled." };
 }

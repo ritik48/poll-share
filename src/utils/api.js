@@ -29,11 +29,11 @@ export const fetchPoll = async (id) => {
     votesPercent[option] = parseInt((poll.votes[option] / totalVotes) * 100);
   }
 
-  return { poll: { ...poll, votes: votesPercent } };
+  return { poll: { ...poll, votes: votesPercent, totalVotes } };
 };
 
 export const addVote = async (id, choice) => {
-  await new Promise((resolve) => setTimeout(resolve, 200));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   const res = await fetch(`${BACKEND}/poll/vote/${id}?choice=${choice}`, {
     method: "POST",
     credentials: "include",

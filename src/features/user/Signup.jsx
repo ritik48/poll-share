@@ -1,4 +1,10 @@
-import { Form, Link, redirect, useActionData } from "react-router-dom";
+import {
+  Form,
+  Link,
+  redirect,
+  useActionData,
+  useNavigation,
+} from "react-router-dom";
 import store from "../../../store";
 import { createUser } from "./userSlice";
 import { ToastContainer, toast } from "react-toastify";
@@ -7,6 +13,8 @@ import { useEffect } from "react";
 
 function Signup() {
   const actionData = useActionData();
+
+  const navigation = useNavigation();
 
   let errors, data;
   if (actionData) {
@@ -131,10 +139,11 @@ function Signup() {
             </div>
 
             <button
+              disabled={navigation.state !== "idle"}
               type="submit"
               className="hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 w-full rounded-lg bg-[#ff5e2e] px-5 py-2.5 text-center text-sm font-medium text-white ring-offset-2 hover:bg-[#ed6749] focus:outline-none focus:ring-2 focus:ring-orange-300"
             >
-              Sign up
+              {navigation.state !== "idle" ? "Creating..." : "Sign up"}
             </button>
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
               Already have an account ?{" "}
@@ -189,6 +198,7 @@ async function signupAction({ request }) {
       username,
       name,
     }),
+    credentials: "include",
   });
 
   const data = await res.json();
