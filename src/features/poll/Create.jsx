@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import {
   Form,
@@ -9,17 +10,21 @@ import {
 import { toast } from "react-toastify";
 import { createPoll } from "../../utils/api";
 import { MdDelete } from "react-icons/md";
+import { IoCloseSharp } from "react-icons/io5";
 
-function OptionInput({ value, onRemoveInputs }) {
+import { useMultiInput } from "../../hooks/useMultiInputController";
+import { PollPrivacyPopup } from "./PollPrivacyPopup";
+
+function OptionInput({ id, onRemoveInputs }) {
   return (
     <div className="flex items-center gap-4">
       <input
-        name={`option${value}`}
+        name={`option${id}`}
         placeholder={`Option`}
         className="w-full rounded-md border border-[#d2d0d0] px-4 py-2 text-xl outline-none ring-blue-200 placeholder:text-lg placeholder:font-normal placeholder:text-[#908e8e] focus:border-blue-200 focus:ring"
       />
-      {value > 2 && (
-        <button type="click" onClick={(e) => onRemoveInputs(e, value)}>
+      {id > 2 && (
+        <button type="click" onClick={(e) => onRemoveInputs(id)}>
           <MdDelete size={25} color="" cursor={"pointer"} />
         </button>
       )}
@@ -27,18 +32,46 @@ function OptionInput({ value, onRemoveInputs }) {
   );
 }
 
+function CategoryInput({ id, category, onRemoveCategory }) {
+  return (
+    <div className="flex w-fit cursor-pointer items-center gap-2 rounded-full border border-[#bdbdbd] bg-[#efeeee] px-2 py-0.5 shadow-md transition-all duration-300 hover:bg-[#373737] hover:text-[white]">
+      <input
+        className="hidden"
+        defaultValue={category}
+        name={`category${id}`}
+      />
+      <div>{category}</div>
+      <button type="button" onClick={() => onRemoveCategory(id)}>
+        <IoCloseSharp />
+      </button>
+    </div>
+  );
+}
+
 export function Create() {
-  const [optionInputs, setOptionsInputs] = useState({
-    1: <OptionInput value="1" key={1} />,
-    2: <OptionInput value="2" key={2} />,
+  const {
+    multiInputs: optionInputs,
+    removeInputs: removeOption,
+    addInputs: addOption,
+  } = useMultiInput({
+    1: <OptionInput id={1} key={1} />,
+    2: <OptionInput id={2} key={2} />,
   });
 
+  const {
+    multiInputs: categoryInputs,
+    removeInputs: removeCategory,
+    addInputs: addCategory,
+  } = useMultiInput(null);
+
+  const [showPrivacyPopup, setShowPrivacyPopup] = useState(false);
+  const [category, setCategory] = useState("");
+
   const errors = useActionData();
-
   const navigation = useNavigation();
-
   const isSubmitting = navigation.state === "submitting";
 
+  // show toast after submitting the poll
   useEffect(() => {
     if (errors?.error) {
       toast(errors.error);
@@ -48,40 +81,42 @@ export function Create() {
     }
   }, [errors]);
 
-  function handleRemoveInputs(e, id) {
-    e.preventDefault();
-    setOptionsInputs((prev) => {
-      const d = Object.keys(prev).reduce((acc, key) => {
-        if (key !== id.toString()) acc[key] = prev[key];
-        return acc;
-      }, {});
 
-      console.log(d);
-      return d;
-    });
+  function handleAddOption() {
+    const id = Date.now();
+    addOption(<OptionInput key={id} id={id} onRemoveInputs={removeOption} />);
   }
 
-  function handleAddInputs() {
-    const totalInputs = Date.now();
-    setOptionsInputs((prev) => {
-      return {
-        ...prev,
-        [totalInputs]: (
-          <OptionInput
-            key={totalInputs}
-            value={totalInputs}
-            onRemoveInputs={handleRemoveInputs}
-          />
-        ),
-      };
-    });
+  function handleAddCategory(category) {
+    const id = Date.now();
+    addCategory(
+      <CategoryInput
+        key={id}
+        id={id}
+        category={category}
+        onRemoveCategory={removeCategory}
+      />,
+    );
+  }
+
+  function handleCategoryInput(e) {
+    const input = e.target.value;
+
+    if (input.length < 2 && input.substr(-1) === ",") {
+      setCategory("");
+    } else if (input.substr(-1) === ",") {
+      handleAddCategory(input.slice(0, -1));
+      setCategory("");
+    } else {
+      setCategory(input);
+    }
   }
 
   return (
     <div>
-      <div className="mx-auto max-w-6xl pt-32">
+      <div className="mx-auto max-w-6xl pt-28">
         {isSubmitting && (
-          <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 z-10 flex items-center justify-center backdrop-blur-sm">
             <div className="flex flex-col items-center justify-center gap-2">
               <span className="loader"></span>
               <div className="text-3xl font-semibold">
@@ -94,6 +129,9 @@ export function Create() {
           {" "}
           <div className="mb-4 text-4xl">Create Poll</div>
           <Form method="POST" className="space-y-4" replace>
+            {showPrivacyPopup && (
+              <PollPrivacyPopup setShowPrivacyPopup={setShowPrivacyPopup} />
+            )}
             <div className="flex flex-col gap-1">
               <label htmlFor="title">Poll Title</label>
               <input
@@ -117,14 +155,30 @@ export function Create() {
               {Object.entries(optionInputs).map((option) => option[1])}
               <button
                 type="button"
-                onClick={handleAddInputs}
+                onClick={handleAddOption}
                 className="text-x w-fit rounded-md border border-[#ff5e2e] px-4 py-2 transition-all duration-300 ease-in-out hover:border-black hover:bg-black hover:text-white"
               >
                 Add option ➕
               </button>
             </div>
-            <button className="text-x w-fit rounded-md border bg-[#ff5e2e] px-4 py-2 text-white transition-all duration-300 ease-in-out hover:border-black hover:bg-black hover:text-white">
-              Create Poll 🚀{" "}
+            <div>
+              <div className="mb-3 flex flex-wrap gap-2">
+                {categoryInputs &&
+                  Object.entries(categoryInputs).map((c) => c[1])}
+              </div>
+              <input
+                value={category}
+                onChange={handleCategoryInput}
+                placeholder="Enter category seaparated by comma"
+                className="placeholder:font-thi w-full rounded-md border border-[#d2d0d0] px-4 py-2 text-lg outline-none ring-blue-200 placeholder:text-lg placeholder:text-[#908e8e] focus:border-blue-200 focus:ring"
+              />
+            </div>
+            <button
+              onClick={() => setShowPrivacyPopup(true)}
+              type="button"
+              className="text-x w-fit rounded-md border bg-[#ff5e2e] px-4 py-2 text-white transition-all duration-300 ease-in-out hover:border-black hover:bg-black hover:text-white"
+            >
+              Next step
             </button>
           </Form>
         </div>
@@ -136,7 +190,7 @@ export function Create() {
 export async function createPollAction({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-
+  console.log(data);
   const { date, time } = data;
 
   if (!date || !time) return { error: "Please provide date and time" };
@@ -146,7 +200,9 @@ export async function createPollAction({ request }) {
 
   const pollData = {
     title: data.title,
+    status: data.status === true,
     options: [],
+    category: [],
     expiresAt: dateTimeObject,
   };
   for (let key in data) {
@@ -155,6 +211,12 @@ export async function createPollAction({ request }) {
     }
   }
 
+  for (let key in data) {
+    if (key.includes("category") && data[key].length !== 0) {
+      pollData.category.push(data[key]);
+    }
+  }
+  console.log(pollData)
   if (!pollData.title || pollData.options.length < 2) {
     return { error: "Please provide all the data to create poll" };
   }

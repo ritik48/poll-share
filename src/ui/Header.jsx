@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { logoutUser, userSelector } from "../features/user/userSlice";
 
 export default function Header() {
   const { username, name } = useSelector(userSelector);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   async function handleLogout() {
     await fetch("http://127.0.0.1:3000/logout", {
@@ -13,7 +12,6 @@ export default function Header() {
     });
 
     dispatch(logoutUser());
-    navigate("/");
   }
 
   return (
@@ -30,21 +28,6 @@ export default function Header() {
             Create
           </Link>
         </div>
-
-        {/* <div className="hidden items-start gap-10 sm:flex">
-          <Link
-            to={"/poll"}
-            className="font-semibold text-[#464646] underline-offset-2 hover:underline"
-          >
-            Discover
-          </Link>
-          <Link
-            to={"/create"}
-            className="font-semibold text-[#464646] underline-offset-2 hover:underline"
-          >
-            Create
-          </Link>
-        </div> */}
         {!username && (
           <div className="flex items-center gap-2 sm:gap-6">
             <Link

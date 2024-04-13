@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import { fetchCurrentUser, userSelector } from "../user/userSlice";
 import { addVote, deletePoll, fetchPoll } from "../../utils/api";
 
-
 function formatTime(timestamp) {
   const date = new Date(timestamp);
 
@@ -109,7 +108,7 @@ export function Poll() {
   }, [fetcher, dispatch]);
 
   return (
-    <div className="pt-32">
+    <div className="pt-28 pb-10">
       <React.Suspense
         fallback={
           <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm">
@@ -130,7 +129,7 @@ export function Poll() {
                     <div className="flex items-center gap-4">
                       <img
                         className="w-8 rounded-full border border-slate-700"
-                        src={`${poll.user.avatar}`}
+                        src={`${poll.user.avatar || "/assets/bg-images/user.png"}`}
                         alt="profile"
                       />
                       <div className="text-md font-semibold">
@@ -157,16 +156,14 @@ export function Poll() {
                     </div>
                     <div>{formatTime(poll.publishedAt)}</div>
                     <div className="flex gap-1">
-                      🏷️
-                      <span className="rounded-lg border border-slate-400 px-2">
-                        tech
-                      </span>
-                      <span className="rounded-lg border border-slate-400 px-2">
-                        fashion
-                      </span>
-                      <span className="rounded-lg border border-slate-400 px-2">
-                        environment
-                      </span>
+                      {poll.category?.map((category) => (
+                        <span
+                          key={category}
+                          className="rounded-lg border border-slate-400 px-2"
+                        >
+                          {category}
+                        </span>
+                      ))}
                     </div>
                     {username === poll.user.username && (
                       <button
