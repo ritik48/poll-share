@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 
 import { fetchCurrentUser, userSelector } from "../user/userSlice";
 import { addVote, deletePoll, fetchPoll } from "../../utils/api";
+import { IoTrendingUpSharp } from "react-icons/io5";
+import { FcLineChart, FcComboChart } from "react-icons/fc";
 
 function formatTime(timestamp) {
   const date = new Date(timestamp);
@@ -53,7 +55,11 @@ function Option({ option, vote, onVote, id, index, loading, selectedOption }) {
       </div>
       <div className="absolute inset-0 z-[-1] " style={{ width: `${vote}%` }}>
         <div
-          className={`absolute inset-0 animate-[option_0.6s_ease-in-out_1] ${vote > 0 && userChoice === index ? "bg-[#ff8e6b]" : "bg-[#e1cf4a]"}`}
+          className={`absolute inset-0 animate-[option_0.6s_ease-in-out_1] 
+          ${
+            vote > 0 && userChoice === index ?
+              "bg-[#ff8e6b]" : "bg-[#c7db7e]"
+          }`}
         ></div>
       </div>
     </div>
@@ -108,7 +114,7 @@ export function Poll() {
   }, [fetcher, dispatch]);
 
   return (
-    <div className="pt-28 pb-10">
+    <div className="pb-10 pt-28">
       <React.Suspense
         fallback={
           <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm">
@@ -134,6 +140,10 @@ export function Poll() {
                       />
                       <div className="text-md font-semibold">
                         {poll.user.name}
+                      </div>
+                      <div className="text-md ml-auto flex items-center gap-4 rounded-md border px-2 font-semibold shadow-md">
+                        <span>56 Views</span>
+                        <FcComboChart size={30} />
                       </div>
                     </div>
                     <div className="flex flex-col gap-4">
@@ -174,14 +184,15 @@ export function Poll() {
                       </button>
                     )}
                   </div>
-                  <div className="flex w-[30%] flex-col items-center justify-center gap-3">
+                  <div className="flex w-[30%] flex-col items-center justify-center gap-4">
                     <div className="text-4xl font-light tracking-widest">
                       <Countdown
                         date={timeLeft(poll.publishedAt, poll.expiresAt)}
                       />
                     </div>
-                    <div className="text-4xl font-semibold">
-                      {poll.totalVotes} 📈
+                    <div className="flex items-center gap-4 text-4xl font-semibold">
+                      <span>{poll.totalVotes}</span>
+                      <FcLineChart color="green" size={40} />
                     </div>
                   </div>
                 </div>
