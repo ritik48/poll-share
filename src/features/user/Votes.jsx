@@ -8,7 +8,6 @@ import { FcComboChart } from "react-icons/fc";
 
 export function Votes() {
   const { polls } = useLoaderData();
-  console.log(polls);
 
   return (
     <div className="bg-[#f9f9f9] px-4 py-3">
@@ -22,7 +21,7 @@ export function Votes() {
           </div>
         }
       >
-        <div className="flex flex-wrap items-start gap-2">
+        <div className="ma flex flex-wrap items-start gap-2">
           <Await resolve={polls}>
             {(polls) => {
               return polls.map(({ poll, choice }) => {
@@ -41,7 +40,7 @@ export function Votes() {
                         <div className="text-[#383737]">{poll.user.name}</div>
                       </div>
                       <div className="text-md font-semibold">{poll.title}</div>
-                      <div className="flex items-center my-2 gap-2">
+                      <div className="my-2 flex items-center gap-2">
                         <span className="text-sm font-semibold">You : </span>
                         <p className="text-sm font-semibold text-[#646262]">
                           {choice}
