@@ -3,6 +3,8 @@ import { Link, useLoaderData } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { IoTrendingUpSharp } from "react-icons/io5";
 import { LiaEdit } from "react-icons/lia";
+import { LiaPollSolid } from "react-icons/lia";
+// import { SiTicktick } from "react-icons/si";
 import {
   FcLineChart,
   FcComboChart,
@@ -10,6 +12,7 @@ import {
   FcSportsMode,
 } from "react-icons/fc";
 import { FcBarChart } from "react-icons/fc";
+import { CiBookmarkPlus } from "react-icons/ci";
 
 import {
   LineChart,
@@ -29,25 +32,19 @@ export function Dashboard() {
   console.log(polls);
   // background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
   return (
-    <div className="gradient h-screen bg-white pb-2 pt-8">
-      <div className="mx-auto flex">
-        <div className="sticky top-14 h-fit w-80 rounded-md pt-6">
-          <div className="flex flex-col items-center gap-5">
-            <img
-              className="w-28 rounded-full border bg-[#fedd9b65] p-2"
-              src="/assets/bg-images/user.png"
-              alt="user"
-            />
-            <div className="text-2xl font-extrabold">Ritik Raj</div>
-            <div className="text-[#464646]">#ritik48</div>
-            <div className="text-[#464646]">✉️ raj769417@gmail.com</div>
-            <button className="text-x mt-2 w-fit rounded-md border border-[#ff5e2e] px-4 py-1 transition-all duration-300 ease-in-out hover:border-black hover:bg-black hover:text-white">
-              Edit Profile
-            </button>
-          </div>
-        </div>
-        <div className="w-full space-y-6 rounded-md border border-l-[#cdcccc] bg-white px-6 py-4 ">
-          {/* <div>
+    <div className="bg-[#f9f9f9] px-4 py-3">
+      {/* <Chart /> */}
+      <Table polls={polls} />
+      <button className="my-6 rounded-md border border-[#b7b6b6] px-4 py-1">
+        Last 7 Days
+      </button>
+      <Chart />
+    </div>
+  );
+}
+
+{
+  /* <div>
             <h2 className="text-2xl font-semibold">Stats</h2>
             <div className="mt-4 flex gap-4">
               <div className="flex w-44 flex-col gap-1 rounded-md border border-[#f0eeee] bg-white p-6 shadow-md shadow-[#e2e1e1]">
@@ -78,15 +75,11 @@ export function Dashboard() {
                 <div className="text-2xl font-bold">+1240</div>
               </div>
             </div>
-          </div> */}
-          <div className="bg-white px-4 py-2">
-            {/* <Chart /> */}
-            <Table polls={polls} />
-            <button className="my-6 rounded-md border border-[#b7b6b6] px-4 py-1">
-              Last 7 Days
-            </button>
-            <Chart />
-            {/* <div className="mt-4 flex flex-wrap gap-3">
+          </div> */
+}
+
+{
+  /* <div className="mt-4 flex flex-wrap gap-3">
               {polls.map((poll) => (
                 <div
                   className="min-w-40 space-y-2 rounded-md border border-gray-200 bg-[#fcf9f9] px-3 py-2 shadow-sm"
@@ -109,12 +102,7 @@ export function Dashboard() {
                   </div>
                 </div>
               ))}
-            </div> */}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+            </div> */
 }
 
 const formattedDate = (dateString) => {
@@ -159,7 +147,9 @@ function Table({ polls }) {
         <button className="rounded-md border border-[#b7b6b6] px-2 py-1">
           Closed Polls
         </button>
-        <div className="mr-10 px-2 py-1 w-fit border border-[#878787] rounded-md ml-auto text-[#e6e3e3] bg-[#220a03] ">Total Results: { polls.length}</div>
+        <div className="ml-auto mr-10 w-fit rounded-md border border-[#878787] bg-[#220a03] px-2 py-1 text-[#e6e3e3] ">
+          Total Results: {polls.length}
+        </div>
       </div>
       <div className="max-h-[240px] overflow-x-auto">
         <table class="border-red w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
@@ -195,8 +185,8 @@ function Table({ polls }) {
                   {poll.title}
                 </th>
                 <td class="px-6 py-4">{formattedDate(poll.publishedAt)}</td>
-                <td class="px-6 py-4">{poll.votes[0] || "0"}</td>
-                <td class="px-6 py-4">{poll.votes[0] || "0"}</td>
+                <td class="px-6 py-4">{poll.formattedVote[0] || "0"}</td>
+                <td class="px-6 py-4">{poll.formattedVote[0] || "0"}</td>
                 <td class="flex gap-4 px-6 py-4">
                   <Link className="text-black hover:text-[#ff7653]">
                     <LiaEdit size={20} />
