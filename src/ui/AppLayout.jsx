@@ -26,7 +26,7 @@ export default function AppLayout() {
   }
 
   return (
-    <div className="">
+    <div className="h-screen">
       <Header />
       <Outlet />
       <ToastContainer />

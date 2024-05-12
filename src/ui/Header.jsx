@@ -48,7 +48,7 @@ export default function Header() {
         {username && (
           <div className="flex items-center gap-2 sm:gap-6">
             <div className="font-semibold">{name}</div>
-            <Link to={"/dashboard"}>
+            <Link to={"profile/dashboard"}>
               <img
                 alt="user"
                 src="/assets/bg-images/user.png"

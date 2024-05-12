@@ -23,6 +23,16 @@ body {
   background-color: #fffbf3;
 }
 
+.active {
+  border-right: 4px solid #ff5e2e;
+
+  background-color: rgb(247, 243, 243);
+}
+
+.active:hover {
+  background-color: rgb(247, 243, 243) !important;
+}
+
 .loader {
   width: 48px;
   height: 48px;

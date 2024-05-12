@@ -9,7 +9,7 @@ export const fetchAllPolls = async () => {
 };
 
 export const fetchPoll = async (id) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 200));
   const res = await fetch(`${BACKEND}/poll/${id}`, {
     method: "GET",
     credentials: "include",
@@ -17,19 +17,41 @@ export const fetchPoll = async (id) => {
   const data = await res.json();
 
   // votes percentage
-  const { poll } = data;
+  const { polls } = data;
 
-  const totalVotes = Object.values(poll.votes).reduce(
+  const totalVotes = Object.values(polls.formattedVote).reduce(
     (acc, curr) => acc + curr,
     0,
   );
 
   const votesPercent = {};
-  for (let option in poll.votes) {
-    votesPercent[option] = parseInt((poll.votes[option] / totalVotes) * 100);
+  for (let option in polls.formattedVote) {
+    votesPercent[option] = parseInt(
+      (polls.formattedVote[option] / totalVotes) * 100,
+    );
   }
 
-  return { poll: { ...poll, votes: votesPercent, totalVotes } };
+  return {
+    poll: {
+      ...polls,
+      votes: votesPercent,
+      totalVotes,
+    },
+  };
+};
+
+export const fetchUserPoll = async (userVotes) => {
+  const promises = userVotes.map((vote) => fetchPoll(vote.poll_id));
+  const pollData = await Promise.all(promises);
+
+  const data = userVotes.map((vote, index) => {
+    return {
+      poll: pollData[index].poll,
+      choice: pollData[index].poll["options"][vote.poll_choice],
+    };
+  });
+
+  return data;
 };
 
 export const addVote = async (id, choice) => {
