@@ -26,6 +26,9 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { fetchPollsCreatedByUser } from "../../utils/api";
+import store from "../../../store";
+import requireAuth from "../../utils/requireAuth";
 
 export function Dashboard() {
   const { polls } = useLoaderData();
@@ -41,6 +44,17 @@ export function Dashboard() {
       <Chart />
     </div>
   );
+}
+
+export async function DashboardLoader({ request }) {
+  await requireAuth(request, true);
+  const userInfo = { ...store.getState().user.user };
+
+  const polls = await fetchPollsCreatedByUser(userInfo._id);
+
+  console.log(polls);
+
+  return polls;
 }
 
 {
@@ -182,11 +196,11 @@ function Table({ polls }) {
                   scope="row"
                   class="whitespace-nowrap px-6 py-4 font-semibold text-gray-900 dark:text-white"
                 >
-                  {poll.title}
+                  <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
                 </th>
                 <td class="px-6 py-4">{formattedDate(poll.publishedAt)}</td>
-                <td class="px-6 py-4">{poll.formattedVote[0] || "0"}</td>
-                <td class="px-6 py-4">{poll.formattedVote[0] || "0"}</td>
+                <td class="px-6 py-4">{poll.totalVotes || "0"}</td>
+                <td class="px-6 py-4">{"soon"}</td>
                 <td class="flex gap-4 px-6 py-4">
                   <Link className="text-black hover:text-[#ff7653]">
                     <LiaEdit size={20} />

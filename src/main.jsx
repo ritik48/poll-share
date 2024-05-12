@@ -12,7 +12,7 @@ import { Poll, pollAction, pollLoader } from "./features/poll/Poll.jsx";
 import Home, { homeLoader } from "./ui/Home.jsx";
 import { Signup, signupAction } from "./features/user/Signup.jsx";
 import { Create, createPollAction } from "./features/poll/Create.jsx";
-import { Dashboard } from "./features/user/Dashboard.jsx";
+import { Dashboard, DashboardLoader } from "./features/user/Dashboard.jsx";
 import { Profile } from "./features/user/Profile.jsx";
 import { Votes, voteLoader } from "./features/user/Votes.jsx";
 
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
           {
             path: "dashboard",
             element: <Dashboard />,
-            loader: homeLoader,
+            loader: DashboardLoader,
           },
           {
             path: "votes",
