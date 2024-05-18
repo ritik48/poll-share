@@ -5,10 +5,10 @@ import { NavLink, Outlet } from "react-router-dom";
 export function Profile() {
   return (
     <div className="mt-[50px] grid grid-cols-[260px_1fr]">
-      <div className="pt-12">
+      <div className="border pt-10 border-t-0 border-r-[#cdcccc]">
         <div className="flex flex-col items-center gap-5">
           <img
-            className="w-28 rounded-full border bg-[#fedd9b65] p-2"
+            className="w-20 rounded-full border bg-[#fedd9b65] p-2"
             src="/assets/bg-images/user.png"
             alt="user"
           />
@@ -37,8 +37,10 @@ export function Profile() {
           <div>My Votes</div>
         </NavLink>
       </div>
-      <div className="w-full space-y-6 border border-t-0 border-l-[#cdcccc] bg-[#f9f9f9] px-6 py-4">
-        <Outlet />
+      <div className="overflow-y-scroll">
+        <div className="h-[calc(100vh-50px)] w-full bg-[#f9f9f9]">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
