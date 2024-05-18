@@ -1,11 +1,11 @@
 import { CiBookmarkPlus } from "react-icons/ci";
 import { LiaPollSolid } from "react-icons/lia";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 export function Profile() {
   return (
-    <div className="gradient bg-white pb-2 pt-8 h-full">
-      <div className="fixed bottom-0 top-12 w-[260px] rounded-md  bg-white pt-6">
+    <div className="mt-[50px] grid grid-cols-[260px_1fr]">
+      <div className="pt-12">
         <div className="flex flex-col items-center gap-5">
           <img
             className="w-28 rounded-full border bg-[#fedd9b65] p-2"
@@ -37,7 +37,7 @@ export function Profile() {
           <div>My Votes</div>
         </NavLink>
       </div>
-      <div className="w-full space-y-6 rounded-md border h-full border-l-[#cdcccc] bg-[#f9f9f9] px-6 py-4 pl-[270px] ">
+      <div className="w-full space-y-6 border border-t-0 border-l-[#cdcccc] bg-[#f9f9f9] px-6 py-4">
         <Outlet />
       </div>
     </div>
