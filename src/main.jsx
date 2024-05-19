@@ -12,9 +12,10 @@ import { Poll, pollAction, pollLoader } from "./features/poll/Poll.jsx";
 import Home, { homeLoader } from "./ui/Home.jsx";
 import { Signup, signupAction } from "./features/user/Signup.jsx";
 import { Create, createPollAction } from "./features/poll/Create.jsx";
-import { Dashboard, DashboardLoader } from "./features/user/Dashboard.jsx";
+import { UserPolls, UserPollsLoader } from "./features/user/UserPolls.jsx";
 import { Profile } from "./features/user/Profile.jsx";
 import { Votes, voteLoader } from "./features/user/Votes.jsx";
+import { Dashboard } from "./features/user/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,13 +39,17 @@ const router = createBrowserRouter([
         action: createPollAction,
       },
       {
-        path: "/profile",
+        path: "/account",
         element: <Profile />,
         children: [
           {
             path: "dashboard",
             element: <Dashboard />,
-            loader: DashboardLoader,
+          },
+          {
+            path: "polls",
+            element: <UserPolls />,
+            loader: UserPollsLoader,
           },
           {
             path: "votes",

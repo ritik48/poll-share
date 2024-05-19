@@ -1,358 +1,15 @@
-import { GrFormNextLink } from "react-icons/gr";
-import { Link, useLoaderData } from "react-router-dom";
-import { MdDelete } from "react-icons/md";
-import { IoTrendingUpSharp } from "react-icons/io5";
-import { LiaEdit } from "react-icons/lia";
-import { LiaPollSolid } from "react-icons/lia";
-// import { SiTicktick } from "react-icons/si";
-import {
-  FcLineChart,
-  FcComboChart,
-  FcElectricalSensor,
-  FcSportsMode,
-} from "react-icons/fc";
+import { FaPoll } from "react-icons/fa";
 import { FcBarChart } from "react-icons/fc";
-import { CiBookmarkPlus } from "react-icons/ci";
-
+import { FaCircleArrowUp } from "react-icons/fa6";
+import { FcDocument } from "react-icons/fc";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
+  Area,
+  AreaChart,
   CartesianGrid,
   Tooltip,
-  Legend,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { fetchPollsCreatedByUser } from "../../utils/api";
-import store from "../../../store";
-import requireAuth from "../../utils/requireAuth";
-
-function getStatus() {
-  const status = ["Closed", "Live"];
-
-  return status[Math.floor(Math.random() * status.length)];
-}
-
-export function Dashboard() {
-  let { polls } = useLoaderData();
-  console.log(polls);
-
-  polls = polls.map((poll) => {
-    return { ...poll, status: getStatus() };
-  });
-
-  // polls = Array.from({ length: 10 }, () => {
-  //   return { ...polls };
-  // });
-
-  polls = polls.concat(...Array(2).fill(polls));
-  // background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
-  return (
-    <div className="mx-auto w-[90%] bg-[#f9f9f9] px-6 py-6">
-      <div>
-        <h1 className="mt-2 text-3xl font-semibold">All Polls</h1>
-        <div className="my-6 flex justify-between ">
-          <input
-            placeholder="Search poll"
-            className="rounded-md border border-[#d7d6d6] px-3 py-1 text-lg outline-none"
-          />
-          <div className="flex items-center overflow-hidden rounded-md border border-[#dcdbdb] bg-white px-2 py-1 text-lg shadow-sm">
-            <div className="rounded-md bg-[#ff5f2eca] px-3 text-white">All</div>
-            <div className="rounded-md px-3 py-1">Active</div>
-            <div className="rounded-md px-3 py-1">Closed</div>
-          </div>
-        </div>
-        <Table polls={polls} />
-      </div>
-      {/* <Chart /> */}
-    </div>
-  );
-}
-
-function Table({ polls }) {
-  return (
-    <div className="overflow-hidden rounded-md border border-[#d4d4d4] shadow-md">
-      <div className="grid grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] rounded-md rounded-b rounded-bl-none rounded-br-none px-4 py-4 font-bold">
-        <div>TITLE</div>
-        <div>PUBLISHED ON</div>
-        <div>STATUS</div>
-        <div>VOTES</div>
-        <div>ACTION</div>
-      </div>
-      <div>
-        {polls?.map((poll) => (
-          <div className="grid grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] border-b bg-white px-4 py-4 hover:bg-gray-50">
-            <div class="">
-              <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
-            </div>
-            <div class="">{formattedDate(poll.publishedAt)}</div>
-            <div
-              class={`${poll.status === "Live" ? "bg-[#5baf5b]" : "bg-[#d15656]"} w-fit rounded-xl px-2 py-0.5 text-white`}
-            >
-              {poll.status}
-            </div>
-
-            <div class="">{poll.totalVotes || "0"}</div>
-
-            <div class="flex gap-4">
-              <Link className="text-black hover:text-[#ff7653]">
-                <LiaEdit size={20} />
-              </Link>
-              <Link className="text-black hover:text-[#ff6d50]">
-                <MdDelete size={20} />
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="flex items-center justify-between px-4 py-3">
-        <div className="font-bold">Showing 11 to 20 of 55 results</div>
-        <div className="flex gap-2 font-bold">
-          <button className="rounded-md border border-[#acabab] px-4 py-2">
-            Previous
-          </button>
-          <button className="rounded-md border border-[#acabab] px-4 py-2">
-            Next
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export async function DashboardLoader({ request }) {
-  await requireAuth(request, true);
-  const userInfo = { ...store.getState().user.user };
-
-  const polls = await fetchPollsCreatedByUser(userInfo._id);
-
-  console.log(polls);
-
-  return polls;
-}
-
-{
-  /* <div>
-            <h2 className="text-2xl font-semibold">Stats</h2>
-            <div className="mt-4 flex gap-4">
-              <div className="flex w-44 flex-col gap-1 rounded-md border border-[#f0eeee] bg-white p-6 shadow-md shadow-[#e2e1e1]">
-                <div className="flex items-center gap-4">
-                  <div className="text-sm font-semibold text-[#686868]">
-                    Total Votes
-                  </div>
-                  <FcBarChart size={25} />
-                </div>
-                <div className="text-2xl font-bold">+430</div>
-              </div>
-              <div className="flex w-44 flex-col gap-1 rounded-md border border-[#f0eeee] bg-white p-6 shadow-md shadow-[#e2e1e1]">
-                <div className="flex items-center gap-4">
-                  <div className="text-sm font-semibold text-[#686868]">
-                    Active Votes
-                  </div>
-                  <FcElectricalSensor size={25} />
-                </div>
-                <div className="text-2xl font-bold">+150</div>
-              </div>
-              <div className="flex w-44 flex-col gap-1 rounded-md border border-[#f0eeee] bg-white p-6 shadow-md shadow-[#e2e1e1]">
-                <div className="flex items-center gap-4">
-                  <div className="text-sm font-semibold text-[#686868]">
-                    Audience reached
-                  </div>
-                  <FcSportsMode size={25} />
-                </div>
-                <div className="text-2xl font-bold">+1240</div>
-              </div>
-            </div>
-          </div> */
-}
-
-{
-  /* <div className="mt-4 flex flex-wrap gap-3">
-              {polls.map((poll) => (
-                <div
-                  className="min-w-40 space-y-2 rounded-md border border-gray-200 bg-[#fcf9f9] px-3 py-2 shadow-sm"
-                  key={poll._id}
-                >
-                  <div>
-                    <div className="text-md font-semibold">{poll.title}</div>
-                    <div className="mt-1 flex items-center gap-2">
-                      <div className="text-md text-gray-600">3h ago</div>
-                      <Link className="ml-auto">
-                        <MdDelete size={18} />
-                      </Link>
-                      <Link
-                        to={`poll/${poll._id}`}
-                        className="rounded-md border border-[#c4c4c4] px-2 transition-all duration-300 hover:bg-[#222121] hover:text-[#d0cfcf] "
-                      >
-                        <GrFormNextLink size={25} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div> */
-}
-
-const formattedDate = (dateString) => {
-  const date = new Date(dateString);
-
-  const options = { weekday: "long", day: "2-digit", month: "long" };
-  const formattedDate = date.toLocaleDateString("en-US", options);
-
-  return formattedDate;
-};
-
-function Table2({ polls }) {
-  return (
-    <div class="relative mt-2 bg-white py-2 shadow-md sm:rounded-lg">
-      <div class="flex items-center gap-4 pb-4">
-        <div class="relative pl-2">
-          <div class="rtl:inset-r-0 pointer-events-none absolute inset-y-0 left-2 flex items-center ps-3 rtl:right-0">
-            <svg
-              class="h-5 w-5 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </div>
-          <input
-            type="text"
-            id="table-search"
-            class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Search for items"
-          />
-        </div>
-        <button className="rounded-md border border-[#b7b6b6] px-2 py-1">
-          Active Polls
-        </button>
-        <button className="rounded-md border border-[#b7b6b6] px-2 py-1">
-          Closed Polls
-        </button>
-        <div className="ml-auto mr-10 w-fit rounded-md border border-[#878787] bg-[#220a03] px-2 py-1 text-[#e6e3e3] ">
-          Total Results: {polls.length}
-        </div>
-      </div>
-      <div className="max-h-[240px] overflow-x-auto">
-        <table class="border-red w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
-          <thead class="sticky top-0 bg-gray-500 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-            <tr className="bg-[#e3e3e3]">
-              <th scope="col" class="px-6 py-3">
-                Poll title
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Published on
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Votes
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Views
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {polls?.map((poll) => (
-              <tr
-                key={poll.id}
-                class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <th
-                  scope="row"
-                  class="whitespace-nowrap px-6 py-4 font-semibold text-gray-900 dark:text-white"
-                >
-                  <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
-                </th>
-                <td class="px-6 py-4">{formattedDate(poll.publishedAt)}</td>
-                <td class="px-6 py-4">{poll.totalVotes || "0"}</td>
-                <td class="px-6 py-4">{"soon"}</td>
-                <td class="flex gap-4 px-6 py-4">
-                  <Link className="text-black hover:text-[#ff7653]">
-                    <LiaEdit size={20} />
-                  </Link>
-                  <Link className="text-black hover:text-[#ff6d50]">
-                    <MdDelete size={20} />
-                  </Link>
-                </td>
-              </tr>
-            ))}
-
-            {/* <tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                class="whitespace-nowrap px-6 py-4 font-semibold text-gray-900 dark:text-white"
-              >
-                Microsoft Surface Pro
-              </th>
-              <td class="px-6 py-4">White</td>
-              <td class="px-6 py-4">Laptop PC</td>
-              <td class="px-6 py-4">$1999</td>
-              <td class="flex gap-4 px-6 py-4">
-                <Link className="text-black hover:text-[#ff7653]">
-                  <LiaEdit size={20} />
-                </Link>
-                <Link className="text-black hover:text-[#ff6d50]">
-                  <MdDelete size={20} />
-                </Link>
-              </td>
-            </tr>
-            <tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                class="whitespace-nowrap px-6 py-4 font-semibold text-gray-900 dark:text-white"
-              >
-                Magic Mouse 2
-              </th>
-              <td class="px-6 py-4">Black</td>
-              <td class="px-6 py-4">Accessories</td>
-              <td class="px-6 py-4">$99</td>
-              <td class="flex gap-4 px-6 py-4">
-                <Link className="text-black hover:text-[#ff7653]">
-                  <LiaEdit size={20} />
-                </Link>
-                <Link className="text-black hover:text-[#ff6d50]">
-                  <MdDelete size={20} />
-                </Link>
-              </td>
-            </tr>
-
-            <tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                class="whitespace-nowrap px-6 py-4 font-semibold text-gray-900 dark:text-white"
-              >
-                Apple Watch
-              </th>
-              <td class="px-6 py-4">Silver</td>
-              <td class="px-6 py-4">Accessories</td>
-              <td class="px-6 py-4">$179</td>
-              <td class="flex gap-4 px-6 py-4">
-                <Link className="text-black hover:text-[#ff7653]">
-                  <LiaEdit size={20} />
-                </Link>
-                <Link className="text-black hover:text-[#ff6d50]">
-                  <MdDelete size={20} />
-                </Link>
-              </td>
-            </tr> */}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
 
 function Chart() {
   const data = [
@@ -385,19 +42,20 @@ function Chart() {
       vote: 186,
     },
   ];
+  // shadow-[0_3px_10px_rgb(0,0,0,0.2)]
   return (
-    <div className="w-fit rounded-2xl bg-[white] px-4 py-4 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+    <div className="rounded-2xl rounded-t-none border border-t-0 border-[#d0d0d0] bg-[white] px-4 py-4">
       <AreaChart
-        width={500}
-        height={200}
+        width={700}
+        height={250}
         data={data}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
         <defs>
           {/* <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#f6f0e0f1" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#f6f0e0f1" stopOpacity={0} />
-          </linearGradient> */}
+              <stop offset="5%" stopColor="#f6f0e0f1" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#f6f0e0f1" stopOpacity={0} />
+            </linearGradient> */}
           <linearGradient id="colorVote" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#ff884d" stopOpacity={0.8} />
             <stop offset="95%" stopColor="#ff884d" stopOpacity={0} />
@@ -408,11 +66,10 @@ function Chart() {
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip
           contentStyle={{
-            backgroundColor: "black",
-            color: "wheat",
-            borderRadius: "10px",
-            fontSize: "18px",
-            fontWeight: "bolder",
+            backgroundColor: "white",
+            color: "black",
+            borderRadius: "6px",
+            fontSize: "16px",
           }}
           itemStyle={{ fontSize: "14px" }}
         />
@@ -425,6 +82,83 @@ function Chart() {
           fill="url(#colorVote)"
         />
       </AreaChart>
+    </div>
+  );
+}
+
+export function Dashboard() {
+  return (
+    <div className="mx-auto w-[90%] bg-[#f9f9f9] px-6 py-6">
+      <div className="flex gap-4">
+        <div className="flex flex-grow flex-col">
+          <div className="flex w-full">
+            <div className="flex w-full items-center gap-8 rounded-md rounded-b-none rounded-tr-none border border-b-0 border-t-[3px] border-[#d0d0d0] border-t-orange-500 bg-white px-8 py-4">
+              <div className="flex flex-col gap-1">
+                <div className="text-sm font-extrabold  text-[#474747]">
+                  Votes
+                </div>
+                <div className="flex items-center gap-2 text-2xl font-normal">
+                  602 <FaCircleArrowUp size={19} color="green" />
+                </div>
+              </div>
+              <FcBarChart size={25} />
+            </div>
+            <div className="flex w-full items-center gap-8 rounded-md rounded-b-none rounded-t-none border border-b-0 border-l-0  border-[#d0d0d0]  bg-white px-8 py-4">
+              <div className="flex flex-col gap-1">
+                <div className="text-sm font-extrabold  text-[#474747]">
+                  Views
+                </div>
+                <div className="flex items-center gap-2 text-2xl font-normal">
+                  1420 <FaCircleArrowUp size={19} color="green" />
+                </div>
+              </div>
+              <FaPoll size={25} />
+            </div>
+            <div className="flex w-full items-center gap-8 rounded-md rounded-b-none rounded-tl-none border border-b-0 border-l-0  border-[#d0d0d0]  bg-white px-8 py-4">
+              <div className="flex flex-col gap-1">
+                <div className="text-sm font-extrabold  text-[#474747]">
+                  Polls
+                </div>
+                <div className="text-2xl font-normal">15</div>
+              </div>
+              <FcDocument size={25} />
+            </div>
+          </div>
+          <Chart />
+        </div>
+        <div className="w-72 rounded-md border border-[#d0d0d0] bg-white px-4 py-4 shadow-sm">
+          <div className="border-b pb-4">
+            <div className="font-semibold">Realtime</div>
+            <div className="text-sm text-[#6f6f6f]">Updating live</div>
+          </div>
+          <div className="border-b py-4">
+            <div className="font-semibold">1024</div>
+            <div className="text-sm text-[#6f6f6f]">Votes</div>
+          </div>
+          <div className="border-b py-4">
+            <div className="font-semibold">2014</div>
+            <div className="text-sm text-[#6f6f6f]">
+              Views &#xb7; Last 48 hours
+            </div>
+          </div>
+          <div className="space-y-2 py-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-sm text-[#6f6f6f]">Your recent polls</div>
+              <div className="text-sm text-[#6f6f6f]">Views</div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center justify-between gap-2">
+                <div>What is you favourite color</div>
+                <div>25</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>Best frontend framwork</div>
+                <div>489</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

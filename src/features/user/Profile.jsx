@@ -1,11 +1,12 @@
 import { CiBookmarkPlus } from "react-icons/ci";
 import { LiaPollSolid } from "react-icons/lia";
+import { MdDashboardCustomize } from "react-icons/md";
 import { NavLink, Outlet } from "react-router-dom";
 
 export function Profile() {
   return (
     <div className="mt-[50px] grid grid-cols-[260px_1fr]">
-      <div className="border pt-10 border-t-0 border-r-[#cdcccc]">
+      <div className="border border-t-0 border-r-[#cdcccc] pt-10">
         <div className="flex flex-col items-center gap-5">
           <img
             className="w-20 rounded-full border bg-[#fedd9b65] p-2"
@@ -23,6 +24,13 @@ export function Profile() {
         <NavLink
           to={"dashboard"}
           className="mt-4 flex w-full gap-6 border border-t-0 py-2 pl-4 hover:bg-[#e5e4e4]"
+        >
+          <MdDashboardCustomize size={20} />
+          <div>Dashboard</div>
+        </NavLink>
+        <NavLink
+          to={"polls"}
+          className="flex w-full gap-6 border border-t-0 py-2 pl-4 hover:bg-[#e5e4e4]"
         >
           <LiaPollSolid size={20} />
           <div>My Polls</div>

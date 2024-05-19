@@ -57,8 +57,7 @@ function Option({ option, vote, onVote, id, index, loading, selectedOption }) {
         <div
           className={`absolute inset-0 animate-[option_0.6s_ease-in-out_1] 
           ${
-            vote > 0 && userChoice === index ?
-              "bg-[#ff8e6b]" : "bg-[#c7db7e]"
+            vote > 0 && userChoice === index ? "bg-[#ff8e6b]" : "bg-[#c7db7e]"
           }`}
         ></div>
       </div>
@@ -142,7 +141,7 @@ export function Poll() {
                         {poll.user.name}
                       </div>
                       <div className="text-md ml-auto flex items-center gap-4 rounded-md border px-2 font-semibold shadow-md">
-                        <span>56 Views</span>
+                        <span>{poll.views} Views</span>
                         <FcComboChart size={30} />
                       </div>
                     </div>
