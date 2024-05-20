@@ -29,6 +29,7 @@ export default function AppLayout() {
     <div className="grid h-screen grid-rows-[1fr]">
       <Header />
       <Outlet />
+      <ToastContainer />
     </div>
   );
 }
