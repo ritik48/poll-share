@@ -1,9 +1,16 @@
 import { CiBookmarkPlus } from "react-icons/ci";
 import { LiaPollSolid } from "react-icons/lia";
 import { MdDashboardCustomize } from "react-icons/md";
-import { NavLink, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { NavLink, Navigate, Outlet } from "react-router-dom";
 
 export function Profile() {
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  if (!isAuthenticated) {
+    return <Navigate to={"/"} replace />;
+  }
+
   return (
     <div className="mt-[50px] grid grid-cols-[260px_1fr]">
       <div className="border border-t-0 border-r-[#cdcccc] pt-10">
