@@ -6,21 +6,14 @@ import { fetchPollsCreatedByUser } from "../../utils/api";
 import store from "../../../store";
 import requireAuth from "../../utils/requireAuth";
 
-function getStatus() {
-  const status = ["Closed", "Live"];
-
-  return status[Math.floor(Math.random() * status.length)];
-}
 
 export function UserPolls() {
   let { polls } = useLoaderData();
 
   polls = polls.map((poll) => {
-    return { ...poll, status: getStatus() };
+    return { ...poll, poll_status: poll.poll_status ?? "public" };
   });
 
-
-  polls = polls.concat(...Array(2).fill(polls));
   return (
     <div className="mx-auto w-[90%] bg-[#f9f9f9] px-6 py-6">
       <div>
@@ -45,7 +38,7 @@ export function UserPolls() {
 function Table({ polls }) {
   return (
     <div className="overflow-hidden rounded-md border border-[#d4d4d4] shadow-md">
-      <div className="grid text-sm grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] rounded-md rounded-b rounded-bl-none rounded-br-none px-4 py-4 font-bold">
+      <div className="grid grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] rounded-md rounded-b rounded-bl-none rounded-br-none px-4 py-4 text-sm font-bold">
         <div>TITLE</div>
         <div>PUBLISHED ON</div>
         <div>STATUS</div>
@@ -54,17 +47,16 @@ function Table({ polls }) {
       </div>
       <div>
         {polls?.map((poll) => (
-          <div className="grid font-normal text-sm grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] border-b bg-white px-4 py-4 hover:bg-gray-50">
+          <div className="grid grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] border-b bg-white px-4 py-4 text-sm font-normal hover:bg-gray-50">
             <div class="">
               <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
             </div>
             <div class="">{formattedDate(poll.publishedAt)}</div>
             <div
-              class={`${poll.status === "Live" ? "bg-[#9ffa9f] text-green-700 border-green-800" : "bg-[#d6d6d6] border-slate-500 text-[#2c2c2c]"} w-fit border flex justify-center items-center rounded-lg font-semibold px-3`}
+              class={`${poll.poll_status === "public" ? "border-green-800 bg-[#9ffa9f] text-green-700" : "border-slate-500 bg-[#d6d6d6] text-[#2c2c2c]"} flex w-fit items-center justify-center rounded-md border px-3 font-medium`}
             >
-              {poll.status}
+              {poll.poll_status}
             </div>
-
             <div class="">{poll.totalVotes || "0"}</div>
 
             <div class="flex gap-4">
@@ -78,7 +70,7 @@ function Table({ polls }) {
           </div>
         ))}
       </div>
-      <div className="flex bg-[#e7e7e7] items-center justify-between px-4 py-3">
+      <div className="flex items-center justify-between bg-[#e7e7e7] px-4 py-3">
         <div className="font-bold">Showing 11 to 20 of 55 results</div>
         <div className="flex gap-2 font-bold">
           <button className="rounded-md border border-[#acabab] px-4 py-2">

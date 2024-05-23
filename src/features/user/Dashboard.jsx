@@ -10,6 +10,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useEffect } from "react";
+import { getUserStats } from "../../utils/api";
+import { defer, useLoaderData } from "react-router-dom";
 
 function Chart() {
   const data = [
@@ -87,6 +90,8 @@ function Chart() {
 }
 
 export function Dashboard() {
+  const { data } = useLoaderData();
+
   return (
     <div className="mx-auto w-[90%] bg-[#f9f9f9] px-6 py-6">
       <div className="flex gap-4">
@@ -98,7 +103,7 @@ export function Dashboard() {
                   Votes
                 </div>
                 <div className="flex items-center gap-2 text-2xl font-normal">
-                  602 <FaCircleArrowUp size={19} color="green" />
+                  {data.totalVotes} <FaCircleArrowUp size={19} color="green" />
                 </div>
               </div>
               <FcBarChart size={25} />
@@ -109,7 +114,7 @@ export function Dashboard() {
                   Views
                 </div>
                 <div className="flex items-center gap-2 text-2xl font-normal">
-                  1420 <FaCircleArrowUp size={19} color="green" />
+                  {data.totalViews} <FaCircleArrowUp size={19} color="green" />
                 </div>
               </div>
               <FaPoll size={25} />
@@ -119,7 +124,7 @@ export function Dashboard() {
                 <div className="text-sm font-extrabold  text-[#474747]">
                   Polls
                 </div>
-                <div className="text-2xl font-normal">15</div>
+                <div className="text-2xl font-normal">{data.totalPolls}</div>
               </div>
               <FcDocument size={25} />
             </div>
@@ -161,4 +166,10 @@ export function Dashboard() {
       </div>
     </div>
   );
+}
+
+export async function dashboardLoader() {
+  const data = await getUserStats();
+
+  return data;
 }

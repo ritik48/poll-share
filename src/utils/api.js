@@ -21,7 +21,6 @@ export const fetchPoll = async (id) => {
   const { polls } = data;
 
   // GET TOTAL VOTES
-  console.log(polls);
   const totalVotes = Object.values(polls.formattedVote).reduce(
     (acc, curr) => acc + curr,
     0,
@@ -106,17 +105,24 @@ export const fetchPollsCreatedByUser = async (id) => {
   });
 
   const data = await res.json();
-  console.log(data);
 
   const modifiedPolls = data.polls.map((poll) => {
     const totalVotes = Object.values(poll.formattedVote).reduce(
       (prev, cur) => parseInt(cur) + prev,
       0,
     );
-    console.log(poll);
-    console.log(totalVotes);
     return { ...poll, totalVotes };
   });
 
   return { polls: modifiedPolls };
+};
+
+export const getUserStats = async () => {
+  const res = await fetch(`${BACKEND}/stats`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  return data;
 };

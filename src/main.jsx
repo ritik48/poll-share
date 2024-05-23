@@ -15,7 +15,7 @@ import { Create, createPollAction } from "./features/poll/Create.jsx";
 import { UserPolls, UserPollsLoader } from "./features/user/UserPolls.jsx";
 import { Profile } from "./features/user/Profile.jsx";
 import { Votes, voteLoader } from "./features/user/Votes.jsx";
-import { Dashboard } from "./features/user/Dashboard.jsx";
+import { Dashboard, dashboardLoader } from "./features/user/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +45,7 @@ const router = createBrowserRouter([
           {
             path: "dashboard",
             element: <Dashboard />,
+            loader: dashboardLoader,
           },
           {
             path: "polls",

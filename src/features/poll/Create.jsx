@@ -81,7 +81,6 @@ export function Create() {
     }
   }, [errors]);
 
-
   function handleAddOption() {
     const id = Date.now();
     addOption(<OptionInput key={id} id={id} onRemoveInputs={removeOption} />);
@@ -190,7 +189,7 @@ export function Create() {
 export async function createPollAction({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  console.log(data);
+
   const { date, time } = data;
 
   if (!date || !time) return { error: "Please provide date and time" };
@@ -200,7 +199,7 @@ export async function createPollAction({ request }) {
 
   const pollData = {
     title: data.title,
-    status: data.status === true,
+    status: data.status === "true",
     options: [],
     category: [],
     expiresAt: dateTimeObject,
@@ -216,13 +215,12 @@ export async function createPollAction({ request }) {
       pollData.category.push(data[key]);
     }
   }
-  console.log(pollData)
+ 
   if (!pollData.title || pollData.options.length < 2) {
     return { error: "Please provide all the data to create poll" };
   }
 
   const resData = await createPoll(pollData);
-  console.log("poll data = ", resData);
   if (resData.success) {
     return redirect(`/poll/${resData.poll._id}`);
   }
