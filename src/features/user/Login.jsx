@@ -1,5 +1,5 @@
 import { Form, Link, redirect, useActionData } from "react-router-dom";
-import store from "../../../store";
+import store from "../../redux/store";
 import { createUser } from "./userSlice";
 
 function Login() {

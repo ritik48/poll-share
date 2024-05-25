@@ -1,5 +1,5 @@
 import { Await, Link, defer, useLoaderData } from "react-router-dom";
-import store from "../../../store";
+import store from "../../redux/store";
 import { fetchPoll, fetchUserPoll } from "../../utils/api";
 import requireAuth from "../../utils/requireAuth";
 import { GrFormNextLink } from "react-icons/gr";

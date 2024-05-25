@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import store from "../../store";
+import store from "../redux/store";
 import { fetchCurrentUser } from "../features/user/userSlice";
 
 // Get username from store. If it's null then call fetchCurrentUser, which will hit the endpoint with the cookie, and populate the store

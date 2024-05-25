@@ -5,7 +5,7 @@ import {
   useActionData,
   useNavigation,
 } from "react-router-dom";
-import store from "../../../store";
+import store from "../../redux/store";
 import { createUser } from "./userSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
