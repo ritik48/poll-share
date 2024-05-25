@@ -38,12 +38,12 @@ export function UserPolls() {
     <div className="mx-auto w-[90%] bg-[#f9f9f9] px-6 py-6">
       <div>
         <h1 className="mt-2 text-3xl font-semibold">All Polls</h1>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex py-4 px-2 bg-[#f9f9f9] items-center justify-between gap-4 sticky top-0">
           <input
             placeholder="Search poll"
             className="rounded-md border border-[#d7d6d6] px-3 py-1 text-lg outline-none"
           />
-          <div className="my-6 flex gap-2 items-center">
+          <div className="flex gap-2 items-center">
             <div className="flex items-center overflow-hidden rounded-md border border-[#dcdbdb] bg-white px-1 py-1 text-lg shadow-sm">
               <div
                 onClick={() => handleChangePollStatus("all")}
@@ -64,7 +64,7 @@ export function UserPolls() {
                 Closed
               </div>
             </div>
-            <div className="my-6 flex justify-between ">
+            <div className="flex justify-between ">
               <div className="flex items-center overflow-hidden rounded-md border border-[#dcdbdb] py-1 bg-white px-1 text-lg shadow-sm">
                 <div
                   onClick={() => handleChangePollVisibility("public")}
