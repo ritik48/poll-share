@@ -2,12 +2,8 @@ import { Link } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { LiaEdit } from "react-icons/lia";
 
-import { fetchPollsCreatedByUser } from "../../utils/api";
-import store from "../../redux/store";
-import requireAuth from "../../utils/requireAuth";
 import { useGetUserPollsQuery } from "../../redux/api";
 import { useSelector } from "react-redux";
-import { userSelector } from "./userSlice";
 import { useState } from "react";
 
 export function UserPolls() {
@@ -126,7 +122,9 @@ export function UserPolls() {
 }
 
 function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
-  return (
+  return polls.length === 0 ? (
+    <div className="text-2xl my-8 text-center">You don't have any polls</div>
+  ) : (
     <div className="overflow-hidden rounded-md border border-[#d4d4d4] shadow-md">
       <div className="grid grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] rounded-md rounded-b rounded-bl-none rounded-br-none px-4 py-4 text-sm font-bold">
         <div>TITLE</div>
@@ -170,38 +168,33 @@ function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
           </div>
         ))}
       </div>
-      {polls.length === 0 ? (
-        <div>You don't have any polls</div>
-      ) : (
-        <div className="flex items-center justify-between bg-[#e7e7e7] px-4 py-3">
-          <div className="">
-            Showing <span className="font-bold">{(page - 1) * limit + 1}</span>{" "}
-            to{" "}
-            <span className="font-bold">
-              {Math.min(page * limit, totalPolls)}
-            </span>{" "}
-            of <span className="font-bold">{totalPolls}</span> results
-          </div>
-          <div className="flex overflow-hidden rounded-md  border border-[#acabab] font-bold">
-            {page > 1 && (
-              <button
-                onClick={() => onChangePage(page - 1)}
-                className="border border-b-0 border-l-0 border-r border-t-0 border-[#acabab] px-4 py-2 transition-all duration-300 hover:bg-black hover:text-white"
-              >
-                Previous
-              </button>
-            )}
-            {page < totalPage && (
-              <button
-                onClick={() => onChangePage(page + 1)}
-                className="px-4 py-2 transition-all duration-300 hover:bg-black hover:text-white"
-              >
-                Next
-              </button>
-            )}
-          </div>
+      <div className="flex items-center justify-between bg-[#e7e7e700] px-4 py-3">
+        <div className="">
+          Showing <span className="font-bold">{(page - 1) * limit + 1}</span> to{" "}
+          <span className="font-bold">
+            {Math.min(page * limit, totalPolls)}
+          </span>{" "}
+          of <span className="font-bold">{totalPolls}</span> results
         </div>
-      )}
+        <div className="flex overflow-hidden rounded-md  border border-[#acabab] font-bold">
+          {page > 1 && (
+            <button
+              onClick={() => onChangePage(page - 1)}
+              className="border border-b-0 border-l-0 border-r border-t-0 border-[#acabab] px-4 py-2 transition-all duration-300 hover:bg-black hover:text-white"
+            >
+              Previous
+            </button>
+          )}
+          {page < totalPage && (
+            <button
+              onClick={() => onChangePage(page + 1)}
+              className="px-4 py-2 transition-all duration-300 hover:bg-black hover:text-white"
+            >
+              Next
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -7,8 +7,11 @@ const apiSlice = createApi({
     getUserPolls: builder.query({
       query: ({userId, q="all", visibility="all", limit=10, offset=0}) => `/user/poll/${userId}?q=${q}&visibility=${visibility}&limit=${limit}&offset=${offset}`,
     }),
+    getUserVotedPolls: builder.query({
+      query: ({userId, q="all", visibility="all", limit=10, offset=0}) => `/user/voted/${userId}?q=${q}&visibility=${visibility}&limit=${limit}&offset=${offset}`
+    })
   }),
 });
 
 export { apiSlice };
-export const { useGetUserPollsQuery } = apiSlice;
+export const { useGetUserPollsQuery, useGetUserVotedPollsQuery } = apiSlice;

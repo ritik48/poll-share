@@ -14,7 +14,7 @@ import { Signup, signupAction } from "./features/user/Signup.jsx";
 import { Create, createPollAction } from "./features/poll/Create.jsx";
 import { UserPolls } from "./features/user/UserPolls.jsx";
 import { Profile } from "./features/user/Profile.jsx";
-import { Votes, voteLoader } from "./features/user/Votes.jsx";
+import { Votes } from "./features/user/Votes.jsx";
 import { Dashboard, dashboardLoader } from "./features/user/Dashboard.jsx";
 
 const router = createBrowserRouter([
@@ -54,7 +54,6 @@ const router = createBrowserRouter([
           {
             path: "votes",
             element: <Votes />,
-            loader: voteLoader,
           },
         ],
       },
