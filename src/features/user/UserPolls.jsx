@@ -5,6 +5,7 @@ import { LiaEdit } from "react-icons/lia";
 import { useGetUserPollsQuery } from "../../redux/api";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { formattedDate } from "../../utils/helper";
 
 export function UserPolls() {
   const [pollStatus, setPollStatus] = useState("all");
@@ -31,9 +32,7 @@ export function UserPolls() {
   const totalPolls = data?.total;
   const totalPage = Math.ceil(totalPolls / limit);
 
-  const polls = data?.polls.map((poll) => {
-    return { ...poll, poll_status: poll.poll_status ?? "public" };
-  });
+  const polls = data?.polls;
 
   function handleChangePollStatus(status) {
     setPollStatus(status);
@@ -142,7 +141,7 @@ function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
             <div>
               <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
             </div>
-            <div className="">{formattedDate(poll.publishedAt)}</div>
+            <div className="">{formattedDate(poll.publishedAt, "d-w-m")}</div>
             <div className="flex items-center gap-2">
               <div
                 className={`${poll.poll_status === "public" ? "border-[#84f484] bg-[#9ffa9f] text-green-700 shadow-md" : "border-red-300 bg-[#ee7c7c] text-[#2c2c2c] shadow-md"} flex w-fit items-center justify-center rounded-md border px-3 font-medium`}
@@ -199,11 +198,3 @@ function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
   );
 }
 
-const formattedDate = (dateString) => {
-  const date = new Date(dateString);
-
-  const options = { weekday: "long", day: "2-digit", month: "long" };
-  const formattedDate = date.toLocaleDateString("en-US", options);
-
-  return formattedDate;
-};

@@ -10,61 +10,31 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useEffect } from "react";
 import { getUserStats } from "../../utils/api";
-import { defer, useLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
+import { formattedDate } from "../../utils/helper";
 
-function Chart() {
-  const data = [
-    {
-      name: "April 8",
-      vote: 2,
-    },
-    {
-      name: "April 9",
-      vote: 8,
-    },
-    {
-      name: "April 10",
-      vote: 30,
-    },
-    {
-      name: "April 11",
-      vote: 25,
-    },
-    {
-      name: "April 12",
-      vote: 70,
-    },
-    {
-      name: "April 13",
-      vote: 94,
-    },
-    {
-      name: "April 14",
-      vote: 186,
-    },
-  ];
-  // shadow-[0_3px_10px_rgb(0,0,0,0.2)]
+function Chart({ data }) {
+  let chart_data = data.map((d) => ({
+    day: formattedDate(d.day, "d-m"),
+    vote: d.votes.length,
+  }));
+
   return (
     <div className="rounded-2xl rounded-t-none border border-t-0 border-[#d0d0d0] bg-[white] px-4 py-4">
       <AreaChart
         width={700}
         height={250}
-        data={data}
+        data={chart_data}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
         <defs>
-          {/* <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#f6f0e0f1" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#f6f0e0f1" stopOpacity={0} />
-            </linearGradient> */}
           <linearGradient id="colorVote" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#ff884d" stopOpacity={0.8} />
             <stop offset="95%" stopColor="#ff884d" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis axisLine={false} dataKey="name" fontSize={12} tickLine={false} />
+        <XAxis axisLine={false} dataKey="day" fontSize={12} tickLine={false} />
         <YAxis axisLine={false} fontSize={12} tickLine={false} />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip
@@ -90,7 +60,7 @@ function Chart() {
 }
 
 export function Dashboard() {
-  const { data } = useLoaderData();
+  const { data, chart_data } = useLoaderData();
 
   return (
     <div className="mx-auto w-[90%] bg-[#f9f9f9] px-6 py-6">
@@ -129,7 +99,7 @@ export function Dashboard() {
               <FcDocument size={25} />
             </div>
           </div>
-          <Chart />
+          <Chart data={chart_data} />
         </div>
         <div className="w-72 rounded-md border border-[#d0d0d0] bg-white px-4 py-4 shadow-sm">
           <div className="border-b pb-4">
