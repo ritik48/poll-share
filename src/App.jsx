@@ -6,20 +6,20 @@ export function Hero() {
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-8">
         <img
           src="/assets/bg-images/poll.png"
-          className="absolute left-0 top-[3rem] w-10 opacity-65 sm:top-0 sm:w-14 sm:opacity-100 lg:w-20"
+          className="absolute left-0 top-[3rem] w-10 opacity-65 sm:top-0 sm:w-10 sm:opacity-100 lg:w-14"
           alt="icon"
         />
         <img
           src="/assets/bg-images/polling.png"
-          className="absolute bottom-1/3 right-20 w-10 sm:w-14 lg:w-20"
+          className="absolute bottom-1/3 right-20 w-10 sm:w-10 lg:w-14"
           alt="icon"
         />
         <img
           src="/assets/bg-images/rate.png"
-          className="absolute right-0 top-[-80px] w-10 sm:w-14 lg:w-20"
+          className="absolute right-0 top-[-80px] w-10 sm:w-10 lg:w-14"
           alt="icon"
         />
-        <h1 className="text-center text-4xl font-bold md:text-7xl">
+        <h1 className="text-center text-4xl font-extrabold md:text-7xl">
           Shaping Opinions Together
         </h1>
         <div className="mx-auto text-center text-lg leading-[1.6] text-slate-600 sm:w-3/5 md:text-2xl md:leading-[2.6rem]">
