@@ -27,6 +27,12 @@ export default function Header() {
           >
             Create
           </Link>
+          <Link
+            to={"/discover"}
+            className="hidden text-sm text-[#464646] underline-offset-2 hover:underline sm:block sm:text-lg"
+          >
+            Dicover
+          </Link>
         </div>
         {!username && (
           <div className="flex items-center gap-2 sm:gap-6">

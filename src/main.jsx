@@ -16,6 +16,7 @@ import { UserPolls } from "./features/user/UserPolls.jsx";
 import { Profile } from "./features/user/Profile.jsx";
 import { Votes } from "./features/user/Votes.jsx";
 import { Dashboard, dashboardLoader } from "./features/user/Dashboard.jsx";
+import { DiscoverPolls } from "./features/poll/Discover.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
         path: "/create",
         element: <Create />,
         action: createPollAction,
+      },
+      {
+        path: "/discover",
+        element: <DiscoverPolls />,
+        loader: homeLoader,
       },
       {
         path: "/account",
