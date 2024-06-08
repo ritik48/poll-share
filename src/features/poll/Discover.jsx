@@ -245,7 +245,7 @@ function DiscoverPolls() {
                     <div className="mt-auto flex items-center gap-2">
                       <div className="text-md text-gray-600">3h ago</div>
                       <Link
-                        to={`poll/${poll._id}`}
+                        to={`/poll/${poll._id}`}
                         className="ml-auto rounded-md border border-[#c4c4c4] px-2 transition-all duration-300 hover:bg-[#222121] hover:text-[#d0cfcf] "
                       >
                         <GrFormNextLink size={25} />
