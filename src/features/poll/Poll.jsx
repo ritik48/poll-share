@@ -101,15 +101,18 @@ export function Poll() {
   }
 
   useEffect(() => {
-    const fetcherData = fetcher.data;
-    if (fetcher.state === "idle" && fetcherData) {
-      if (fetcherData.success) {
-        dispatch(fetchCurrentUser());
-        toast("Your vote has been recorded");
-      } else {
-        toast(fetcher.data.message);
+    const fetchData = async () => {
+      const fetcherData = fetcher.data;
+      if (fetcher.state === "idle" && fetcherData) {
+        if (fetcherData.success) {
+          await dispatch(fetchCurrentUser());
+        } else {
+          toast(fetcher.data.message);
+        }
       }
-    }
+    };
+
+    fetchData();
   }, [fetcher, dispatch]);
 
   return (
