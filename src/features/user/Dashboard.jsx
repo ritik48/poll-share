@@ -18,7 +18,7 @@ import { formattedDate } from "../../utils/helper";
 function Chart({ data }) {
   let chart_data = data.map((d) => ({
     day: formattedDate(d.day, "d-m"),
-    vote: d.votes.length,
+    vote: d.total,
   }));
 
   return (
