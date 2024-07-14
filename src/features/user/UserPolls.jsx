@@ -29,6 +29,8 @@ export function UserPolls() {
     offset,
   });
 
+    console.log("table = ", data)
+
   const totalPolls = data?.total;
   const totalPage = Math.ceil(totalPolls / limit);
 
@@ -139,7 +141,7 @@ function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
             className="grid grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] border-b bg-white px-4 py-4 text-sm font-normal hover:bg-gray-50"
           >
             <div>
-              <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
+              <Link to={`/poll/${poll._id}`}>{poll.title}</Link>
             </div>
             <div className="">{formattedDate(poll.publishedAt, "d-w-m")}</div>
             <div className="flex items-center gap-2">
@@ -148,13 +150,13 @@ function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
               >
                 {poll.poll_status}
               </div>
-              {!poll.isLive && (
+              {!poll.isAlive && (
                 <div className="rounded-md border border-slate-300 bg-[#b4b3b3] px-3 font-medium text-[#2c2c2c] shadow-md">
                   {"closed"}
                 </div>
               )}
             </div>
-            <div>{poll.totalVotes || "0"}</div>
+            <div>{poll.total || "0"}</div>
 
             <div className="flex gap-4">
               <Link className="text-black hover:text-[#ff7653]">
