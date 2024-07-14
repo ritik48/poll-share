@@ -9,7 +9,7 @@ import { Login, loginAction } from "./features/user/Login.jsx";
 import store from "./redux/store.js";
 import { Poll, pollAction, pollLoader } from "./features/poll/Poll.jsx";
 
-import Home, { homeLoader } from "./ui/Home.jsx";
+import Home from "./ui/Home.jsx";
 import { Signup, signupAction } from "./features/user/Signup.jsx";
 import { Create, createPollAction } from "./features/poll/Create.jsx";
 import { UserPolls } from "./features/user/UserPolls.jsx";
@@ -26,7 +26,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-        loader: homeLoader,
       },
       {
         path: "poll/:id",
@@ -42,7 +41,6 @@ const router = createBrowserRouter([
       {
         path: "/discover",
         element: <DiscoverPolls />,
-        loader: homeLoader,
       },
       {
         path: "/account",
