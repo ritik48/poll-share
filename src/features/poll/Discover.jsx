@@ -4,7 +4,8 @@ import { GrFormNextLink } from "react-icons/gr";
 import { Link, useLoaderData } from "react-router-dom";
 
 import bg from "../../assets/Discover/pattern2.svg";
-import { useGetPollsQuery } from "../../redux/api";
+import { useGetPollsQuery, useGetTrendingPollsQuery } from "../../redux/api";
+import { TrendingPoll } from "./TrendingPoll";
 
 function timeLeft(publishedAt, expiresAt) {
   const d1 = new Date(publishedAt);
@@ -33,12 +34,16 @@ function DiscoverPolls() {
     offset,
   });
 
+  const {
+    data: trendingPolls,
+    isLoading: trendingPollLoading,
+    error: trendingPollerror,
+  } = useGetTrendingPollsQuery();
+
   const totalPolls = data?.total;
   const totalPage = Math.ceil(totalPolls / limit);
 
   const polls = data?.polls;
-
-  console.log(polls);
 
   function handleChangePollStatus(status) {
     setPollStatus(status);
@@ -84,124 +89,17 @@ function DiscoverPolls() {
             <h1 className="my-5 text-left text-3xl font-extrabold text-[black] md:text-5xl">
               Trending
             </h1>
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div
-                className="w-full cursor-pointer rounded-2xl border-2 border-gray-200 bg-[#fffbfb] p-4 shadow-md shadow-[#838383ca] transition-all duration-300 ease-in-out hover:-translate-y-2 hover:border-[#ff5f2eca] md:w-1/2"
-                key={polls[0]._id}
-              >
-                <div className="mb-1 flex items-center gap-5">
-                  <img
-                    className="h-5 w-5 rounded-full bg-blue-500 object-cover shadow-md sm:h-10 sm:w-10"
-                    src={`${polls[1].user.avatar}`}
-                    alt="user"
-                  />
-                  <div className="text-sm text-[#383737] sm:text-xl">
-                    {polls[1].user.name}
-                  </div>
-                  <div className="ml-auto text-sm text-gray-600 sm:text-base">
-                    3h ago
-                  </div>
-                </div>
-                <div className="mt-4 text-xl font-semibold sm:text-2xl">
-                  {polls[1].title}
-                </div>
-                <div className="mt-2 flex items-center gap-4">
-                  <span className="text-xl font-light text-red-500 sm:text-2xl">
-                    Closes in:{" "}
-                  </span>
-                  <div className="text-xl font-light tracking-widest text-red-500 sm:text-2xl">
-                    <Countdown
-                      date={timeLeft(polls[1].publishedAt, polls[1].expiresAt)}
-                    />
-                  </div>
-                </div>
-                <div className="mt-4 flex flex-col gap-2 text-gray-500">
-                  <span className="text-semibold text-sm sm:text-base">
-                    Category
-                  </span>
-                  <div className="flex flex-wrap items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
-                        Tech
-                      </span>
-                      <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
-                        Web development
-                      </span>
-                    </div>
-                    <div className="my-2 flex items-center gap-10 text-sm font-bold text-green-600 sm:my-0 sm:text-lg">
-                      <div>+1750 votes</div>
-                      <div>+2545 views</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-1 flex items-center gap-2">
-                  <Link
-                    to={`poll/${polls[0]._id}`}
-                    className="ml-auto rounded-md border border-[#c4c4c4] px-2 transition-all duration-300 hover:bg-[#222121] hover:text-[#d0cfcf] "
-                  >
-                    <GrFormNextLink size={25} />
-                  </Link>
-                </div>
+            {trendingPollLoading ? (
+              <div className="flex items-center justify-center">
+                <span className="loader"></span>
               </div>
-              <div
-                className="w-full cursor-pointer rounded-2xl border-2 border-gray-200 bg-[#fffbfb] p-4 shadow-md shadow-[#838383ca] transition-all duration-300 ease-in-out hover:-translate-y-2 hover:border-[#ff5f2eca] md:w-1/2"
-                key={polls[1]._id}
-              >
-                <div className="mb-1 flex items-center gap-5">
-                  <img
-                    className="h-5 w-5 rounded-full bg-blue-500 object-cover shadow-md sm:h-10 sm:w-10"
-                    src={`${polls[1].user.avatar}`}
-                    alt="user"
-                  />
-                  <div className="text-sm text-[#383737] sm:text-xl">
-                    {polls[1].user.name}
-                  </div>
-                  <div className="ml-auto text-sm text-gray-600 sm:text-base">
-                    3h ago
-                  </div>
-                </div>
-                <div className="mt-4 text-xl font-semibold sm:text-2xl">
-                  {polls[1].title}
-                </div>
-                <div className="mt-2 flex items-center gap-4">
-                  <span className="text-xl font-light text-red-500 sm:text-2xl">
-                    Closes in:{" "}
-                  </span>
-                  <div className="text-xl font-light tracking-widest text-red-500 sm:text-2xl">
-                    <Countdown
-                      date={timeLeft(polls[1].publishedAt, polls[1].expiresAt)}
-                    />
-                  </div>
-                </div>
-                <div className="mt-4 flex flex-col gap-2 text-gray-500">
-                  <span className="text-semibold text-sm sm:text-base">
-                    Category
-                  </span>
-                  <div className="flex flex-wrap items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
-                        Tech
-                      </span>
-                      <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
-                        Web development
-                      </span>
-                    </div>
-                    <div className="my-2 flex items-center gap-10 text-sm font-bold text-green-600 sm:my-0 sm:text-lg">
-                      <div>+1750 votes</div>
-                      <div>+2545 views</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-1 flex items-center gap-2">
-                  <Link
-                    to={`poll/${polls[0]._id}`}
-                    className="ml-auto rounded-md border border-[#c4c4c4] px-2 transition-all duration-300 hover:bg-[#222121] hover:text-[#d0cfcf] "
-                  >
-                    <GrFormNextLink size={25} />
-                  </Link>
-                </div>
+            ) : (
+              <div className="flex flex-col gap-4 md:flex-row">
+                {trendingPolls?.polls?.map((poll) => (
+                  <TrendingPoll poll={poll} />
+                ))}
               </div>
-            </div>
+            )}
           </div>
         )}
       </section>
@@ -298,7 +196,7 @@ function DiscoverPolls() {
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center mt-2 justify-between bg-[#e7e7e700] px-4 py-3">
+                <div className="mt-2 flex items-center justify-between bg-[#e7e7e700] px-4 py-3">
                   <div className="">
                     Showing{" "}
                     <span className="font-bold">{(page - 1) * limit + 1}</span>{" "}
