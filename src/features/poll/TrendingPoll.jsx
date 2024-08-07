@@ -1,6 +1,8 @@
 import Countdown from "react-countdown";
 import { GrFormNextLink } from "react-icons/gr";
 import { Link } from "react-router-dom";
+import { GoLinkExternal } from "react-icons/go";
+import TimeAgo from "react-timeago";
 
 export function TrendingPoll({ poll }) {
   return (
@@ -17,42 +19,49 @@ export function TrendingPoll({ poll }) {
         <div className="text-sm text-[#383737] sm:text-xl">
           {poll.user.name}
         </div>
-        <div className="ml-auto text-sm text-gray-600 sm:text-base">3h ago</div>
-      </div>
-      <div className="mt-4 text-xl font-semibold sm:text-2xl">{poll.title}</div>
-      <div className="mt-2 flex items-center gap-4">
-        <span className="text-xl font-light text-red-500 sm:text-2xl">
-          Closes in:{" "}
-        </span>
-        <div className="text-xl font-light tracking-widest text-red-500 sm:text-2xl">
-          <Countdown date={new Date(poll.expiresAt).getTime()} />
+        <div className="ml-auto text-sm text-gray-600 sm:text-base">
+          <TimeAgo date={poll.createdAt} live={false} />
         </div>
       </div>
-      <div className="mt-4 flex flex-col gap-2 text-gray-500">
-        <span className="text-semibold text-sm sm:text-base">Category</span>
-        <div className="flex flex-wrap items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
-              Tech
-            </span>
-            <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
-              Web development
-            </span>
-          </div>
-          <div className="my-2 flex items-center gap-10 text-sm font-bold text-green-600 sm:my-0 sm:text-lg">
-            <div>+1750 votes</div>
-            <div>+2545 views</div>
+      <Link to={`/poll/${poll._id}`}>
+        <div className="mt-4 text-xl font-semibold sm:text-2xl">
+          {poll.title}
+        </div>
+        <div className="mt-2 flex items-center gap-4">
+          <span className="text-xl font-light text-red-500 sm:text-2xl">
+            Closes in:{" "}
+          </span>
+          <div className="text-xl font-light tracking-widest text-red-500 sm:text-2xl">
+            <Countdown date={new Date(poll.expiresAt).getTime()} />
           </div>
         </div>
-      </div>
-      <div className="mt-1 flex items-center gap-2">
-        <Link
+        <div className="mt-4 flex flex-col gap-2 text-gray-500">
+          <span className="text-semibold text-sm sm:text-base">Category</span>
+          <div className="flex flex-wrap items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
+                Tech
+              </span>
+              <span className="text-semibold rounded-xl border px-2 py-1.5 text-sm sm:border-2 sm:text-base">
+                Web development
+              </span>
+            </div>
+            <div className="my-2 flex items-center gap-10 text-sm font-bold text-green-600 sm:my-0 sm:text-lg">
+              <div>+1750 votes</div>
+              <div>+2545 views</div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-1">
+          <GoLinkExternal size={18} className="ml-auto text-gray-600" />
+          {/* <Link
           to={`/poll/${poll._id}`}
           className="ml-auto rounded-md border border-[#c4c4c4] px-2 transition-all duration-300 hover:bg-[#222121] hover:text-[#d0cfcf] "
         >
           <GrFormNextLink size={25} />
-        </Link>
-      </div>
+        </Link> */}
+        </div>
+      </Link>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Countdown from "react-countdown";
 import { GrFormNextLink } from "react-icons/gr";
 import { Link, useLoaderData } from "react-router-dom";
+import TimeAgo from "react-timeago";
 
 import bg from "../../assets/Discover/pattern2.svg";
 import { useGetPollsQuery, useGetTrendingPollsQuery } from "../../redux/api";
@@ -44,6 +45,7 @@ function DiscoverPolls() {
   const totalPage = Math.ceil(totalPolls / limit);
 
   const polls = data?.polls;
+  console.log(polls);
 
   function handleChangePollStatus(status) {
     setPollStatus(status);
@@ -184,7 +186,9 @@ function DiscoverPolls() {
                           {poll.title}
                         </div>
                         <div className="mt-auto flex items-center gap-2">
-                          <div className="text-md text-gray-600">3h ago</div>
+                          <div className="text-md text-gray-600">
+                            <TimeAgo date={poll.createdAt} live={false} />
+                          </div>
                           <Link
                             to={`/poll/${poll._id}`}
                             className="ml-auto rounded-md border border-[#c4c4c4] px-2 transition-all duration-300 hover:bg-[#222121] hover:text-[#d0cfcf] "
