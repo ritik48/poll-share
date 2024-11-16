@@ -27,6 +27,28 @@ const userSlice = createSlice({
     loadingUser(state, action) {
       state.isLoading = true;
     },
+    updateVote(state, action) {
+      const { poll_id, poll_choice } = action.payload;
+      const existingVoteIndex = state.user.vote.findIndex(
+        (v) => v.poll_id === poll_id,
+      );
+
+      let existingChoice = -1;
+      if (existingVoteIndex !== -1) {
+        existingChoice = state.user.vote[existingVoteIndex].poll_choice;
+      }
+
+      if (existingChoice === parseInt(poll_choice)) {
+        state.user.vote.splice(existingVoteIndex, 1);
+      } else if (existingVoteIndex !== -1) {
+        state.user.vote[existingVoteIndex] = {
+          poll_id,
+          poll_choice: parseInt(poll_choice),
+        };
+      } else {
+        state.user.vote.push({ poll_id, poll_choice: parseInt(poll_choice) });
+      }
+    },
   },
 });
 
@@ -35,7 +57,7 @@ function fetchCurrentUser() {
     dispatch({ type: "user/loadingUser" });
     const res = await fetch("http://127.0.0.1:3000/getUser", {
       credentials: "include",
-    }); 
+    });
 
     if (!res.ok) {
       dispatch({ type: "user/logoutUser" });
@@ -57,6 +79,6 @@ const userSelector = createSelector(
 
 const loadingSelector = (state) => state.user.isLoading;
 
-export const { createUser, logoutUser } = userSlice.actions;
+export const { createUser, logoutUser, updateVote } = userSlice.actions;
 export { userSelector, fetchCurrentUser, loadingSelector };
 export default userSlice.reducer;
