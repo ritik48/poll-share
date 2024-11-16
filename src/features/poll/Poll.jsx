@@ -11,12 +11,13 @@ import Countdown from "react-countdown";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-import { fetchCurrentUser, userSelector } from "../user/userSlice";
+import { fetchCurrentUser, updateVote, userSelector } from "../user/userSlice";
 import { addVote, deletePoll, fetchPoll } from "../../utils/api";
 import { IoTrendingUpSharp } from "react-icons/io5";
 import { FcLineChart, FcComboChart } from "react-icons/fc";
+import store from "../../redux/store";
 
-function formatTime(timestamp) {
+function formatDate(timestamp) {
   const date = new Date(timestamp);
 
   const year = date.getFullYear();
@@ -65,12 +66,6 @@ function Option({ option, vote, onVote, id, index, loading, selectedOption }) {
   );
 }
 
-function timeLeft(publishedAt, expiresAt) {
-  const d1 = new Date(publishedAt);
-  const d2 = new Date(expiresAt);
-  // console.log(d2.getTime() - d1.getTime());
-  return d2.getTime();
-}
 
 export function Poll() {
   const navigate = useNavigate();
@@ -104,9 +99,7 @@ export function Poll() {
     const fetchData = async () => {
       const fetcherData = fetcher.data;
       if (fetcher.state === "idle" && fetcherData) {
-        if (fetcherData.success) {
-          await dispatch(fetchCurrentUser());
-        } else {
+        if (!fetcherData.success) {
           toast(fetcher.data.message);
         }
       }
@@ -166,7 +159,7 @@ export function Poll() {
                         />
                       ))}
                     </div>
-                    <div>{formatTime(poll.publishedAt)}</div>
+                    <div>{formatDate(poll.publishedAt)}</div>
                     <div className="flex gap-1">
                       {poll.category?.map((category) => (
                         <span
@@ -188,9 +181,7 @@ export function Poll() {
                   </div>
                   <div className="flex w-[30%] flex-col items-center justify-center gap-4">
                     <div className="text-4xl font-light tracking-widest">
-                      <Countdown
-                        date={timeLeft(poll.publishedAt, poll.expiresAt)}
-                      />
+                      <Countdown date={new Date(poll.expiresAt).getTime()} />
                     </div>
                     <div className="flex items-center gap-4 text-4xl font-semibold">
                       <span>{poll.totalVotes}</span>
@@ -224,6 +215,9 @@ export async function pollAction({ request }) {
   if (!data.success) {
     return { success: false, message: data.message };
   }
+
+  // update user vote in the redux state
+  store.dispatch(updateVote({ poll_id: id, poll_choice: choice }));
 
   return { success: true, message: "Successfully polled." };
 }
