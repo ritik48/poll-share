@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useGetUserVotedPollsQuery } from "../../redux/api";
 import { useSelector } from "react-redux";
 import { GrFormNextLink } from "react-icons/gr";
+import { useDebouncedSearch } from "../../hooks/useDebouncedSearch";
 
 export function Votes() {
   const [pollStatus, setPollStatus] = useState("all");
@@ -11,6 +12,9 @@ export function Votes() {
 
   const [limit, setLimit] = useState(6);
   const [page, setPage] = useState(1);
+
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedSearch(search);
 
   const offset = (page - 1) * limit;
 
@@ -21,6 +25,7 @@ export function Votes() {
     error: pollError,
   } = useGetUserVotedPollsQuery({
     userId,
+    search: debouncedSearch,
     q: pollStatus,
     visibility: pollVisibility,
     limit,
@@ -71,6 +76,8 @@ export function Votes() {
 
         <div className="sticky top-0 flex items-center justify-between gap-4 bg-[#f9f9f9] px-2 py-4">
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search poll"
             className="rounded-md border border-[#d7d6d6] px-3 py-1 text-lg outline-none"
           />

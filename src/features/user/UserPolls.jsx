@@ -6,6 +6,7 @@ import { useGetUserPollsQuery } from "../../redux/api";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { formattedDate } from "../../utils/helper";
+import { useDebouncedSearch } from "../../hooks/useDebouncedSearch";
 
 export function UserPolls() {
   const [pollStatus, setPollStatus] = useState("all");
@@ -13,6 +14,9 @@ export function UserPolls() {
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedSearch(search);
 
   const offset = (page - 1) * limit;
 
@@ -27,9 +31,10 @@ export function UserPolls() {
     visibility: pollVisibility,
     limit,
     offset,
+    search: debouncedSearch,
   });
 
-    console.log("table = ", data)
+  console.log("table = ", data);
 
   const totalPolls = data?.total;
   const totalPage = Math.ceil(totalPolls / limit);
@@ -59,6 +64,8 @@ export function UserPolls() {
         <h1 className="mt-2 text-3xl font-semibold">All Polls</h1>
         <div className="sticky top-0 flex items-center justify-between gap-4 bg-[#f9f9f9] px-2 py-4">
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search poll"
             className="rounded-md border border-[#d7d6d6] px-3 py-1 text-lg outline-none"
           />
@@ -124,7 +131,7 @@ export function UserPolls() {
 
 function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
   return polls.length === 0 ? (
-    <div className="text-2xl my-8 text-center">You don't have any polls</div>
+    <div className="my-8 text-center text-2xl">You don't have any polls</div>
   ) : (
     <div className="overflow-hidden rounded-md border border-[#d4d4d4] shadow-md">
       <div className="grid grid-cols-[0.4fr_0.2fr_0.2fr_0.1fr_0.1fr] rounded-md rounded-b rounded-bl-none rounded-br-none px-4 py-4 text-sm font-bold">
@@ -199,4 +206,3 @@ function Table({ polls, totalPage, page, totalPolls, onChangePage, limit }) {
     </div>
   );
 }
-
