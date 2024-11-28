@@ -86,24 +86,22 @@ function DiscoverPolls() {
             </div>
           </div>
         )}
-        {!pollLoading && polls.length > 0 && (
-          <div className="mx-auto max-w-6xl px-4">
-            <h1 className="my-5 text-left text-3xl font-extrabold text-[black] md:text-5xl">
-              Trending
-            </h1>
-            {trendingPollLoading ? (
-              <div className="flex items-center justify-center">
-                <span className="loader"></span>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4 md:flex-row">
-                {trendingPolls?.polls?.map((poll) => (
-                  <TrendingPoll poll={poll} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        <div className="mx-auto max-w-6xl px-4">
+          <h1 className="my-5 text-left text-3xl font-extrabold text-[black] md:text-5xl">
+            Trending
+          </h1>
+          {trendingPollLoading ? (
+            <div className="flex items-center justify-center">
+              <span className="loader"></span>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4 md:flex-row">
+              {trendingPolls?.polls?.map((poll) => (
+                <TrendingPoll poll={poll} />
+              ))}
+            </div>
+          )}
+        </div>
       </section>
 
       {!pollLoading && (
