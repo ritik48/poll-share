@@ -14,6 +14,8 @@ export function Hero() {
           className="absolute bottom-1/3 right-20 w-10 sm:w-10 lg:w-14"
           alt="icon"
         />
+        // rj: xabyccec ywexczvc
+        // bt: avcewxey awccxwdx
         <img
           src="/assets/bg-images/rate.png"
           className="absolute right-0 top-[-80px] w-10 sm:w-10 lg:w-14"
